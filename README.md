@@ -95,6 +95,22 @@ npm install zikra-slider-pro
 
 `window.zikraslider` is both a factory and a class, so `new zikraslider(...)` works too. `window.zikraslider.ZikraSlider` exposes the class directly.
 
+### CDN
+
+No build step — load the stylesheet and the UMD bundle:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikra-slider.css">
+<script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.min.js"></script>
+<script>
+  zikraslider('#hero', { loop: true, bullets: { enabled: true } });
+</script>
+```
+
+- unpkg works the same way: `https://unpkg.com/zikra-slider-pro@1.2.0/dist/…`.
+- Pin a version (`@1.2.0`) or a major range (`@1`); avoid `latest` in production.
+- **Until the package is published to npm**, these URLs 404. The same files are live from the GitHub Pages deployment: `https://akhtar1985.github.io/zikra-slider-pro/dist/zikra-slider.css` and `…/dist/zikraslider.min.js`.
+
 ### ES modules
 
 ```js
@@ -109,7 +125,7 @@ The module is safe to import during SSR: it only touches `window`/`document` whe
 
 TypeScript declarations ship with the package (`dist/zikraslider.d.ts`): options are deep-optional, event payloads are typed, and a `beforeChange` handler returning `false` is accepted by the signature.
 
-For a CDN, `dist/zikraslider.min.js` (UMD) and `dist/zikra-slider.css` are the production files.
+For a CDN build, `dist/zikraslider.min.js` (UMD) and `dist/zikra-slider.css` are the production files — see [CDN](#cdn) above.
 
 ### CommonJS
 
@@ -307,33 +323,143 @@ responsive: {
 
 ## Events and plugins
 
+`on` accepts one function or an array of functions per event. The same handlers can be attached or removed later with `slider.on(name, fn)` / `slider.off(name, fn)`. Every callback runs inside `try/catch`, so a throwing handler is logged and never breaks the slider.
+
 ```js
 const slider = zikraslider('#hero', {
   on: {
-    init({ instance }) {},
-    beforeChange({ index, previousIndex, reason }) {
-      // return false to cancel the change
-    },
-    afterChange({ index, previousIndex, reason }) {},
-    progress({ progress, index }) {},
-    destroy({ instance }) {}
-  },
-  plugins: [{
-    name: 'analytics',
-    init(instance) {},
-    onChange(instance, { index, previousIndex, reason }) {},
-    destroy(instance) {}
-  }]
+    init({ instance }) {
+      console.log('ready on slide', instance.getState().index);
+    }
+  }
 });
 
-slider.on('afterChange', handler);
-slider.off('afterChange', handler);
+const onSlide = ({ index }) => console.log('now on', index);
+slider.on('afterChange', onSlide);
+slider.off('afterChange', onSlide);
 ```
 
-- `beforeChange` returning `false` cancels the navigation (useful for form guards or video slides).
-- `progress` fires during transitions and drags with `0…1`.
-- Callbacks and plugins are wrapped in `try/catch`: a throwing consumer cannot break the slider.
-- `reason` values include `api`, `next`, `prev`, `arrow`, `bullet`, `drag`, `thumbnail`, `autoplay`, `sync` and whatever you pass to `goTo(index, { reason })`.
+### `beforeChange` — guard a change
+
+Runs before any navigation that moves the index — arrows, bullets, thumbnails, drag release, autoplay, keyboard (`reason` is `arrow`, `bullet`, `thumbnail`, `drag`, `autoplay`, `next`/`prev`), `next()`, `prev()` and `goTo()`. Return `false` to **cancel**: the slider stays on `previousIndex`, and a drag release snaps back. Progress-synced partner sliders (`reason: 'sync'`) move silently and do not fire `beforeChange`.
+
+```js
+let formDirty = false;
+
+const hero = zikraslider('#hero', {
+  on: {
+    beforeChange({ index, previousIndex, reason }) {
+      if (formDirty && !window.confirm(`Leave slide ${previousIndex + 1} without saving?`)) {
+        return false; // cancel — the active slide does not change
+      }
+      console.log(`#${previousIndex} → #${index} (${reason})`);
+    },
+    afterChange({ index }) {
+      history.replaceState(null, '', `#slide-${index + 1}`);
+    }
+  }
+});
+
+// ...mark formDirty = true while editing; save() clears it.
+```
+
+- Returning `false` still lets autoplay keep its timer running — it simply skips that tick, so pair a permanent block with `slider.pause()` if needed.
+- `reason` tells you what triggered the move, so you can allow some paths and block others:
+
+```js
+beforeChange({ reason }) {
+  if (reason === 'autoplay' && document.hidden) return false;
+}
+```
+
+### `progress` — drive a progress UI
+
+Fires for the whole travel, not just at the end: transitions, free-mode drags, momentum and progress-synced slides update it every frame. `progress` is `0…1` across the real slides; `index` is the active index.
+
+```js
+const fill = document.querySelector('[data-read-progress]');
+const label = document.querySelector('[data-progress-label]');
+
+const story = zikraslider('#story', {
+  on: {
+    progress({ progress, index }) {
+      fill.style.transform = `scaleX(${progress})`;
+      label.textContent = `Slide ${index + 1} of ${story.getState().total}`;
+    }
+  }
+});
+```
+
+The handler runs after init, so closing over the `story` variable is safe. Keep heavy work out of it — it can fire on every animation frame; batch React state updates or throttle if needed.
+
+### `destroy` — clean up after yourself
+
+Fires first inside `destroy()`, before listeners, timers and observers are removed and before your markup is restored — so the instance is still fully readable.
+
+```js
+const closeButton = document.querySelector('[data-lightbox-close]');
+
+const lightbox = zikraslider('#lightbox', {
+  on: {
+    destroy({ instance }) {
+      const { index, total } = instance.getState();
+      sessionStorage.setItem('last-slide', `${index}/${total}`);
+      closeButton.removeEventListener('click', onClose);
+      console.log('slider torn down');
+    }
+  }
+});
+
+const onClose = () => lightbox.destroy();
+closeButton.addEventListener('click', onClose);
+```
+
+`destroy()` is idempotent: calling it twice emits nothing the second time and leaves the restored DOM untouched.
+
+### Plugins — package the pattern
+
+A plugin is an object with a callable `init(instance)`. After init succeeds the slider also calls optional `onChange(instance, payload)` and `destroy(instance)` hooks. Errors in any hook are logged and ignored, exactly like event handlers.
+
+```js
+function analyticsPlugin(track) {
+  let changes = 0;
+
+  return {
+    name: 'analytics',
+
+    init(instance) {
+      track('slider_init', { total: instance.getState().total });
+    },
+
+    // Fires after every completed slide change, after afterChange listeners.
+    onChange(instance, { index, previousIndex, reason }) {
+      changes += 1;
+      track('slide_change', { index, previousIndex, reason, changes });
+    },
+
+    // Fires inside destroy(), before the DOM is restored.
+    destroy(instance) {
+      track('slider_destroy', { changes, endedOn: instance.getState().index });
+    }
+  };
+}
+
+zikraslider('#hero', {
+  plugins: [
+    analyticsPlugin((event, props) =>
+      navigator.sendBeacon('/track', JSON.stringify({ event, ...props }))
+    )
+  ]
+});
+```
+
+- `plugins` takes an array (nested arrays are flattened); an object without an `init` function is ignored.
+- Argument order differs by design: `init(instance)`, `onChange(instance, payload)`, `destroy(instance)`.
+- Plugins observe; they cannot cancel a change — that is `beforeChange`'s job.
+- Plugin `onChange` runs **after** `afterChange` handlers, so both see the same `{ index, previousIndex, reason }`.
+- A plugin that throws during `init` is skipped entirely and never receives later hooks.
+
+Event `reason` values include `api`, `next`, `prev`, `arrow`, `bullet`, `drag`, `thumbnail`, `autoplay`, `sync` and whatever you pass to `goTo(index, { reason })`.
 
 ## Instance API
 
