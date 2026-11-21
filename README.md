@@ -115,6 +115,20 @@ No build step — load the stylesheet and the UMD bundle:
 </script>
 ```
 
+Direct links to every published file (script, CSS, ESM, types, React):
+
+| File | Use it for | Link |
+| --- | --- | --- |
+| `zikraslider.min.js` | UMD script tag (what the snippet above loads) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.min.js |
+| `zikra-slider.css` | required stylesheet | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikra-slider.css |
+| `zikraslider.esm.min.js` | ESM `<script type="module">` | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.esm.min.js |
+| `zikraslider.esm.js` | unminified ESM (debugging) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.esm.js |
+| `zikraslider.cjs` | CommonJS | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.cjs |
+| `zikraslider.d.ts` | TypeScript types | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.d.ts |
+| `ZikraSlider.js` | React component (JSX-free) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/react/ZikraSlider.js |
+
+Browse the whole package at https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/ (or https://www.jsdelivr.com/package/npm/zikra-slider-pro).
+
 - unpkg works the same way: `https://unpkg.com/zikra-slider-pro@1.2.0/dist/…`.
 - Pin a version (`@1.2.0`) or a major range (`@1`); avoid `latest` in production.
 - A brand-new package name shows a `0.0.0-stage` placeholder and holds back the tarball for a few minutes while npm runs its malware scan; the release becomes installable automatically once the scan finishes.
