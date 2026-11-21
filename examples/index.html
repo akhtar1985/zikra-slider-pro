@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zikra Slider Pro — zero-dependency slider &amp; carousel</title>
+  <meta name="description" content="Zikra Slider Pro: a production-grade, accessible, zero-dependency slider and carousel for Vanilla JS, React, Next.js and Vue 3.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-family='sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='%23070912'%3Ez%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../dist/zikra-slider.css">
+  <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">z</span>
+        <span>
+          Zikra Slider Pro
+          <small>zero dependencies</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Demo sections">
+        <a href="#gallery">Sync</a>
+        <a href="#effects">Effects</a>
+        <a href="#playground">API</a>
+        <a href="#quickstart">Quick start</a>
+      </nav>
+      <span class="chip"><span class="dot"></span>v1.2.0 · vanillajs</span>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============================================================ HERO -->
+    <section class="section" aria-labelledby="hero-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 — Hero &amp; thumbnails</span>
+            <h2 id="hero-title">A carousel that feels hand-made.</h2>
+            <p>Looping slide engine with autoplay, keyboard support, custom arrows, numbered bullets and a parallax caption layer. The chapter strip is a second slider, synced through <code>sync.asThumbnails</code>.</p>
+          </div>
+          <span class="badge">new zikraslider()</span>
+        </div>
+
+        <div class="hero-shell">
+          <div id="hero" class="zs-slider zs-no-js hero-slider" aria-label="Zikra Slider Pro highlights">
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-1.svg" alt="Indigo and cyan gradient artwork" width="1600" height="1000">
+                <figcaption class="hero-copy">
+                  <span class="kicker">Zikra Slider Pro · v1</span>
+                  <h1>Slides that feel inevitable.</h1>
+                  <p>GPU transforms, pointer input, resize awareness and a destroy() that actually returns your DOM.</p>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-2.svg" alt="Amber gradient artwork" width="1600" height="1000" loading="lazy">
+                <figcaption class="hero-copy">
+                  <span class="kicker">One engine</span>
+                  <h2>Vanilla. React. Next.js. Vue 3.</h2>
+                  <p>The same instance, refs and one <code>destroy()</code> per unmount — no framework lock-in.</p>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-3.svg" alt="Rose gradient artwork" width="1600" height="1000" loading="lazy">
+                <figcaption class="hero-copy">
+                  <span class="kicker">Longevity</span>
+                  <h2>Written to be boring in ten years.</h2>
+                  <p>ES2020, zero runtime dependencies, three explicit animation backends and hard fallbacks.</p>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-4.svg" alt="Forest green gradient artwork" width="1600" height="1000" loading="lazy">
+                <figcaption class="hero-copy">
+                  <span class="kicker">Seamless loop</span>
+                  <h2>No jump you can spot.</h2>
+                  <p>Boundary clones are inert and re-based after the transition, so the loop never resets on screen.</p>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-5.svg" alt="Violet gradient artwork" width="1600" height="1000" loading="lazy">
+                <figcaption class="hero-copy">
+                  <span class="kicker">Accessible by default</span>
+                  <h2>ARIA roles, focus and live regions.</h2>
+                  <p>Keyboard navigation, labelled arrows, slide announcements and reduced-motion handling.</p>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="hero-shot">
+                <img src="./assets/art-6.svg" alt="Ocean blue gradient artwork" width="1600" height="1000" loading="lazy">
+                <figcaption class="hero-copy">
+                  <span class="kicker">Bring your own motion</span>
+                  <h2>GSAP, anime.js or Motion — optional.</h2>
+                  <p>If the library is missing or throws, the same transition falls back to WAAPI or CSS without an error.</p>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div class="hero-controls">
+            <button id="hero-prev" class="icon-btn" type="button" aria-label="Previous chapter"></button>
+            <button id="hero-next" class="icon-btn" type="button" aria-label="Next chapter"></button>
+            <div id="hero-dots" class="hero-dots" aria-label="Choose chapter"></div>
+            <span class="hero-hint">Drag · ← → when focused · autoplay 5s</span>
+          </div>
+
+          <div class="chapters">
+            <div class="chapters-top">
+              <span>Chapters · synced thumbnails</span>
+              <span>6 topics</span>
+            </div>
+            <div id="hero-thumbs" class="zs-slider zs-no-js hero-thumbs" aria-label="Chapter thumbnails">
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-1.svg" alt="Chapter 1"><span>01</span></div></div>
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-2.svg" alt="Chapter 2"><span>02</span></div></div>
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-3.svg" alt="Chapter 3"><span>03</span></div></div>
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-4.svg" alt="Chapter 4"><span>04</span></div></div>
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-5.svg" alt="Chapter 5"><span>05</span></div></div>
+              <div class="zs-slide"><div class="thumb-card"><img src="./assets/art-6.svg" alt="Chapter 6"><span>06</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= GALLERY -->
+    <section class="section" id="gallery" aria-labelledby="gallery-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">02 — Sync modes</span>
+            <h2 id="gallery-title">Main gallery, progress-synced filmstrip.</h2>
+            <p>Lazy images load on demand. Artwork rides a parallax layer, while thumbnails track fractional drag progress (<code>mode: 'progress'</code>) and act as clickable chapter selectors.</p>
+          </div>
+          <span class="badge">sync · lazyLoad</span>
+        </div>
+
+        <div class="panel gallery-shell">
+          <div id="gallery-main" class="zs-slider zs-no-js gallery-main" aria-label="Studio gallery">
+            <div class="zs-slide">
+              <figure class="gallery-card">
+                <img data-zs-src="./assets/art-7.svg" alt="Orchid gradient artwork" width="1600" height="1000">
+                <figcaption class="cap"><span><h3>Orchid Hour</h3><p>23° 06' N · 72° 35' E</p></span><span class="tag">Scan 07</span></figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="gallery-card">
+                <img data-zs-src="./assets/art-8.svg" alt="Ember gradient artwork" width="1600" height="1000">
+                <figcaption class="cap"><span><h3>Ember Study</h3><p>Long exposure · 4.2s</p></span><span class="tag">Scan 08</span></figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="gallery-card">
+                <img data-zs-src="./assets/art-1.svg" alt="Indigo gradient artwork" width="1600" height="1000">
+                <figcaption class="cap"><span><h3>Midnight Index</h3><p>Cool palette · index 01</p></span><span class="tag">Scan 01</span></figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="gallery-card">
+                <img data-zs-src="./assets/art-2.svg" alt="Amber gradient artwork" width="1600" height="1000">
+                <figcaption class="cap"><span><h3>Golden Section</h3><p>Warm palette · index 02</p></span><span class="tag">Scan 02</span></figcaption>
+              </figure>
+            </div>
+            <div class="zs-slide">
+              <figure class="gallery-card">
+                <img data-zs-src="./assets/art-3.svg" alt="Rose gradient artwork" width="1600" height="1000">
+                <figcaption class="cap"><span><h3>Rose Window</h3><p>Backlit · index 03</p></span><span class="tag">Scan 03</span></figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div class="fraction-box">
+            <div id="gallery-fraction" class="zs-bullets" aria-label="Gallery position"></div>
+            <small>Drag the gallery — the filmstrip follows in real time.</small>
+          </div>
+
+          <div id="gallery-thumbs" class="zs-slider zs-no-js gallery-thumbs" aria-label="Gallery thumbnails">
+            <div class="zs-slide"><div class="thumb-card"><img data-zs-src="./assets/art-7.svg" alt="Thumbnail 1"></div></div>
+            <div class="zs-slide"><div class="thumb-card"><img data-zs-src="./assets/art-8.svg" alt="Thumbnail 2"></div></div>
+            <div class="zs-slide"><div class="thumb-card"><img data-zs-src="./assets/art-1.svg" alt="Thumbnail 3"></div></div>
+            <div class="zs-slide"><div class="thumb-card"><img data-zs-src="./assets/art-2.svg" alt="Thumbnail 4"></div></div>
+            <div class="zs-slide"><div class="thumb-card"><img data-zs-src="./assets/art-3.svg" alt="Thumbnail 5"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= EFFECTS -->
+    <section class="section" id="effects" aria-labelledby="effects-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">03 — Types &amp; animation</span>
+            <h2 id="effects-title">Five layouts, five motion flavours.</h2>
+            <p>Layout types and animation flavours are independent: fade, coverflow, stack, flip and cards with staggered timing. The coverflow deliberately requests GSAP, which is not loaded here — the engine degrades to WAAPI.</p>
+          </div>
+          <span class="badge">animation fallback</span>
+        </div>
+
+        <div class="effects-grid">
+          <article class="panel effect-card fade-card">
+            <div class="effect-head">
+              <h3>Fade</h3>
+              <code>type: fade</code>
+            </div>
+            <div id="fade" class="zs-slider zs-no-js mini-slider" aria-label="Fade slider">
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-2.svg" alt="Amber art"><div class="mini-copy"><h4>Crossfade</h4><p>ease: fade · 900ms</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-4.svg" alt="Green art"><div class="mini-copy"><h4>Layered opacity</h4><p>No stacked overflow</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-6.svg" alt="Blue art"><div class="mini-copy"><h4>Autoplay on</h4><p>Pauses on hover</p></div></div></div>
+            </div>
+            <div class="effect-foot"><span>autoplay · bullets</span><span class="badge">fade</span></div>
+          </article>
+
+          <article class="panel effect-card">
+            <div class="effect-head">
+              <h3>Coverflow</h3>
+              <code>type: coverflow</code>
+            </div>
+            <div id="coverflow" class="zs-slider zs-no-js mini-slider" aria-label="Coverflow slider">
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="mini-copy"><h4>Depth</h4><p>rotateY · translateZ</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-5.svg" alt="Violet art"><div class="mini-copy"><h4>Perspective</h4><p>4.5D cover flow</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-7.svg" alt="Orchid art"><div class="mini-copy"><h4>Progress</h4><p>Progressbar bullets</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="mini-copy"><h4>Ready</h4><p>GSAP → WAAPI fallback</p></div></div></div>
+            </div>
+            <div class="effect-foot"><span id="coverflow-backend">backend: pending</span><span class="badge warn">waapi · gsap missing</span></div>
+          </article>
+
+          <article class="panel effect-card stack-card">
+            <div class="effect-head">
+              <h3>Stack</h3>
+              <code>type: stack</code>
+            </div>
+            <div id="stack" class="zs-slider zs-no-js mini-slider" aria-label="Stacked cards slider">
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-8.svg" alt="Ember art"><div class="mini-copy"><h4>Stack card 1</h4><p>zoom effect</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-6.svg" alt="Blue art"><div class="mini-copy"><h4>Stack card 2</h4><p>stacked depth</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-2.svg" alt="Amber art"><div class="mini-copy"><h4>Stack card 3</h4><p>reduce motion ready</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-4.svg" alt="Green art"><div class="mini-copy"><h4>Stack card 4</h4><p>loop + autoplay</p></div></div></div>
+            </div>
+            <div class="effect-foot"><span>autoplay · stacked depth</span><span class="badge">zoom</span></div>
+          </article>
+
+          <article class="panel effect-card">
+            <div class="effect-head">
+              <h3>Flip</h3>
+              <code>effect: flip</code>
+            </div>
+            <div id="flip" class="zs-slider zs-no-js mini-slider" aria-label="Flip effect slider">
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-5.svg" alt="Violet art"><div class="mini-copy"><h4>3D entrance</h4><p>rotateY · 72°</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-8.svg" alt="Ember art"><div class="mini-copy"><h4>Direction aware</h4><p>next flips left, prev right</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="mini-copy"><h4>Same backends</h4><p>CSS · WAAPI · libraries</p></div></div></div>
+            </div>
+            <div class="effect-foot"><span>perspective panel · autoplay</span><span class="badge">flip</span></div>
+          </article>
+
+          <article class="panel effect-card">
+            <div class="effect-head">
+              <h3>Cards + stagger</h3>
+              <code>type: cards · stagger</code>
+            </div>
+            <div id="stagger" class="zs-slider zs-no-js mini-slider" aria-label="Stagger effect slider">
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-2.svg" alt="Amber art"><div class="mini-copy"><h4>Wave timing</h4><p>delay grows with distance</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-4.svg" alt="Green art"><div class="mini-copy"><h4>Cards layout</h4><p>rotateZ · layered scale</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-7.svg" alt="Orchid art"><div class="mini-copy"><h4>Loop safe</h4><p>cyclic relative math</p></div></div></div>
+              <div class="zs-slide"><div class="mini-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="mini-copy"><h4>Drag ready</h4><p>threshold + velocity</p></div></div></div>
+            </div>
+            <div class="effect-foot"><span>stacked rotation · autoplay</span><span class="badge">stagger</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================== PLAYGROUND -->
+    <section class="section" id="playground" aria-labelledby="play-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">04 — Runtime API</span>
+            <h2 id="play-title">Drive it. Break it. Rebuild it.</h2>
+            <p>Free-mode dragging, wheel input, responsive breakpoints, live <code>update()</code>, cancellable <code>beforeChange</code>, and a genuine <code>destroy()</code> / re-init cycle.</p>
+          </div>
+          <span class="badge">live state</span>
+        </div>
+
+        <div class="playground">
+          <div class="panel stage">
+            <div id="play" class="zs-slider zs-no-js play-slider" aria-label="Playground slider">
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="play-copy"><h4>Free mode</h4><p>Momentum + snap</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-2.svg" alt="Amber art"><div class="play-copy"><h4>Wheel</h4><p>Throttled, passive option</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="play-copy"><h4>Keyboard</h4><p>Focus, arrows, Home / End</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-4.svg" alt="Green art"><div class="play-copy"><h4>Responsive</h4><p>Breakpoint-driven options</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-5.svg" alt="Violet art"><div class="play-copy"><h4>Events</h4><p>beforeChange · afterChange</p></div></div></div>
+            </div>
+
+            <div class="control-bar">
+              <button class="btn" data-action="prev" type="button">← Prev</button>
+              <button class="btn" data-action="next" type="button">Next →</button>
+              <button class="btn ghost" data-action="random" type="button">Random</button>
+              <button class="btn ghost" data-action="play" type="button">Play / Pause</button>
+              <button class="btn ghost" data-action="rtl" type="button">Toggle RTL</button>
+              <button class="btn ghost" data-action="cancel" type="button">Cancel next change</button>
+              <button class="btn danger" data-action="rebuild" type="button">Destroy / Rebuild</button>
+            </div>
+          </div>
+
+          <aside class="panel console" aria-label="Instance state and events">
+            <div>
+              <h3>getState()</h3>
+              <dl class="state-grid" id="state"></dl>
+            </div>
+            <div>
+              <h4>Event log</h4>
+              <ul class="log" id="log" aria-live="off"></ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================== QUICK START -->
+    <section class="section" id="quickstart" aria-labelledby="quick-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">05 — Integration</span>
+            <h2 id="quick-title">Two calls, one lifecycle.</h2>
+            <p>Call it as a factory or with <code>new</code>. Both return the same instance, with <code>update()</code>, <code>on()</code> and <code>destroy()</code> ready.</p>
+          </div>
+          <span class="frameworks"><span>Vanilla</span><span>React</span><span>Next.js App Router</span><span>Vue 3</span></span>
+        </div>
+
+        <div class="split">
+          <article class="panel quick-card">
+            <h3>Vanilla JS</h3>
+            <p>Script tag global or ES module import.</p>
+            <pre class="code-block"><code><span class="k">const</span> slider = zikraslider(<span class="s">'#hero'</span>, {
+  type: <span class="s">'slide'</span>,
+  loop: <span class="n">true</span>,
+  slidesPerView: <span class="n">1</span>,
+  features: { autoplay: { enabled: <span class="n">true</span> } },
+  animation: { library: <span class="s">'auto'</span>, effect: <span class="s">'zoom'</span> },
+  on: {
+    beforeChange(e) { <span class="c">// return false to cancel</span> }
+  }
+});
+
+slider.on(<span class="s">'afterChange'</span>, ({ index }) =&gt; console.log(index));
+slider.goTo(<span class="n">2</span>);
+slider.destroy(); <span class="c">// restores the original DOM</span></code></pre>
+          </article>
+
+          <article class="panel quick-card">
+            <h3>Framework wrappers</h3>
+            <p>See <code>examples/react</code>, <code>examples/nextjs</code> and <code>examples/vue</code> for ready-to-copy components.</p>
+            <pre class="code-block"><code><span class="c">// React / Next.js ('use client')</span>
+<span class="k">useEffect</span>(() =&gt; {
+  <span class="k">let</span> slider;
+  <span class="k">import</span>(<span class="s">'zikra-slider-pro'</span>).then(({ default: zs }) =&gt; {
+    slider = zs(ref.current, options);
+  });
+  <span class="k">return</span> () =&gt; slider?.destroy();
+}, []);
+
+<span class="c">// Vue 3</span>
+onMounted(() =&gt; { instance = zikraslider(el.value, props.options); });
+onBeforeUnmount(() =&gt; instance?.destroy());</code></pre>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>Zikra Slider Pro · MIT · v1.2.0</span>
+      <span>Zero dependencies. One file. Ten years.</span>
+    </div>
+  </footer>
+
+  <script src="../dist/zikraslider.umd.js"></script>
+  <script src="./demo.js"></script>
+</body>
+</html>
