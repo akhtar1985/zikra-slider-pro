@@ -103,6 +103,42 @@ npm install zikra-slider-pro
 
 `window.zikraslider` is both a factory and a class, so `new zikraslider(...)` works too. `window.zikraslider.ZikraSlider` exposes the class directly.
 
+### Complete HTML page
+
+Save this as `index.html`, open it, and you have a working slider — CDN files, markup and init in one file (no build step, no dependencies):
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zikra Slider Pro test</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikra-slider.css">
+</head>
+<body>
+
+  <!-- Slides are direct children of the root. Do not add viewport/track yourself. -->
+  <div id="hero" class="zs-slider zs-no-js" aria-label="Photo gallery" style="max-width: 900px; margin: 40px auto;">
+    <div class="zs-slide"><img src="https://picsum.photos/id/1015/1600/1000" alt="River between mountains" width="1600" height="1000"></div>
+    <div class="zs-slide"><img src="https://picsum.photos/id/1016/1600/1000" alt="Canyon at dusk" width="1600" height="1000" loading="lazy"></div>
+    <div class="zs-slide"><img src="https://picsum.photos/id/1018/1600/1000" alt="Misty mountain lake" width="1600" height="1000" loading="lazy"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.2.0/dist/zikraslider.min.js"></script>
+  <script>
+    const slider = zikraslider('#hero', {
+      loop: true,
+      features: { autoplay: { enabled: true, delay: 4000 } }
+    });
+  </script>
+
+</body>
+</html>
+```
+
+Arrows and bullet pagination are on by default; autoplay is enabled above via `features.autoplay`. The markup rules are explained in [Markup](#markup), and a bigger real-world page is in [`examples/index.html`](examples/index.html).
+
 ### CDN
 
 No build step — load the stylesheet and the UMD bundle:
