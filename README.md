@@ -109,7 +109,7 @@ No build step — load the stylesheet and the UMD bundle:
 
 - unpkg works the same way: `https://unpkg.com/zikra-slider-pro@1.2.0/dist/…`.
 - Pin a version (`@1.2.0`) or a major range (`@1`); avoid `latest` in production.
-- **Until the package is published to npm**, these URLs 404. The same files are live from the GitHub Pages deployment: `https://akhtar1985.github.io/zikra-slider-pro/dist/zikra-slider.css` and `…/dist/zikraslider.min.js`.
+- A brand-new package name shows a `0.0.0-stage` placeholder and holds back the tarball for a few minutes while npm runs its malware scan; the release becomes installable automatically once the scan finishes.
 
 ### ES modules
 
