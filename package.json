@@ -1,6 +1,6 @@
 {
   "name": "zikra-slider-pro",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A small, accessible, zero-dependency carousel engine with seven layouts, parallax and a GSAP/anime.js/Motion → WAAPI → CSS animation ladder.",
   "type": "module",
   "types": "dist/zikraslider.d.ts",
