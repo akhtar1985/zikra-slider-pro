@@ -61,6 +61,14 @@
   ],
   "author": "Zikra",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akhtar1985/zikra-slider-pro.git"
+  },
+  "homepage": "https://akhtar1985.github.io/zikra-slider-pro/",
+  "bugs": {
+    "url": "https://github.com/akhtar1985/zikra-slider-pro/issues"
+  },
   "engines": {
     "node": ">=18"
   },
