@@ -11,6 +11,19 @@ Zikra Slider Pro runs in Vanilla JS, React, Next.js App Router and Vue 3 without
 - **Leaves no trace.** `destroy()` restores your original classes, inline styles, ids and ARIA state — safe for SPA route changes and React StrictMode.
 - **Survives real life.** Missing libraries, too few slides, hidden containers, broken images and repeated init/destroy cycles all degrade quietly.
 
+## Live demo
+
+**[▶ Open the live demo](https://akhtar1985.github.io/zikra-slider-pro/)** — deployed from `main` by GitHub Actions on every push.
+
+[![Zikra Slider Pro demo — hero slider with parallax caption](docs/demo.png)](https://akhtar1985.github.io/zikra-slider-pro/)
+
+Jump straight to a section:
+
+- [Hero & thumbnails](https://akhtar1985.github.io/zikra-slider-pro/examples/#hero) — loop, autoplay, synced thumbnail strip, parallax captions
+- [Gallery](https://akhtar1985.github.io/zikra-slider-pro/examples/#gallery) — lazy images, fraction bullets, progress-synced filmstrip
+- [Effects](https://akhtar1985.github.io/zikra-slider-pro/examples/#effects) — fade, coverflow with GSAP fallback, stacked cards
+- [Playground](https://akhtar1985.github.io/zikra-slider-pro/examples/#playground) — drag, wheel, breakpoints, `destroy()` → rebuild
+
 ## Why Zikra Slider Pro?
 
 Swiper is older, bigger, and has plugins Zikra does not. This project is a deliberate trade: a much smaller surface focused on accessible semantics, a clean destroy/restore lifecycle, and an animation backend you can swap.
@@ -38,6 +51,7 @@ Swiper is older, bigger, and has plugins Zikra does not. This project is a delib
 
 ## Contents
 
+- [Live demo](#live-demo)
 - [Why Zikra Slider Pro?](#why-zikra-slider-pro)
 - [Design principles](#design-principles)
 - [Quick start](#quick-start)
@@ -599,6 +613,11 @@ zikra-slider-pro/
 │  ├─ build.mjs             # esbuild-powered UMD/CJS/ESM build
 │  ├─ serve.mjs             # static demo server (no dependencies)
 │  └─ gen-assets.mjs        # regenerates the demo SVGs
+├─ docs/
+│  └─ demo.png              # live-demo screenshot used above
+├─ .github/workflows/
+│  ├─ ci.yml                # lint · test · typecheck · pack check
+│  └─ pages.yml             # builds and deploys the demo to Pages
 ├─ vitest.config.mjs
 ├─ tsconfig.json            # declaration typecheck
 ├─ package.json
@@ -609,6 +628,8 @@ zikra-slider-pro/
 `npm run build` regenerates `dist/` from `src/`. The engine itself still has zero runtime dependencies; esbuild, vitest and TypeScript are dev-only tooling.
 
 ## Demo
+
+Live: **https://akhtar1985.github.io/zikra-slider-pro/** — or run it locally:
 
 ```bash
 npm run demo
@@ -627,7 +648,7 @@ The suite covers init/a11y, navigation and cancellation, loop wrap, layout trans
 
 ## Continuous integration
 
-`.github/workflows/ci.yml` runs the full pipeline on every push and pull request — Node 22 and 24 on Linux, plus Node 24 on Windows: `npm ci`, lint, the test suite, the declaration typecheck, and a package-contents check. It activates once the project is pushed to a GitHub repository.
+`.github/workflows/ci.yml` runs the full pipeline on every push and pull request — Node 22 and 24 on Linux, plus Node 24 on Windows: `npm ci`, lint, the test suite, the declaration typecheck, and a package-contents check. `.github/workflows/pages.yml` builds the demo and deploys it to GitHub Pages from `main`.
 
 The demo exercises the deliverable set in one page:
 
