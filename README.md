@@ -1,8 +1,16 @@
 # Zikra Slider Pro
 
+[![npm version](https://img.shields.io/npm/v/zikra-slider-pro.svg)](https://www.npmjs.com/package/zikra-slider-pro)
+[![license: MIT](https://img.shields.io/npm/l/zikra-slider-pro.svg)](LICENSE)
+[![live demo](https://img.shields.io/badge/demo-live-6366f1.svg)](https://akhtar1985.github.io/zikra-slider-pro/)
+
 **A small, accessible carousel engine for sites that care about weight and keyboard users.**
 
-Zikra Slider Pro runs in Vanilla JS, React, Next.js App Router and Vue 3 without owning your stack: one ~16 kB (gzip) file, seven layouts, an optional animation ladder (GSAP / anime.js / Motion One → WAAPI → CSS), and accessibility that is on by default instead of an add-on module.
+```bash
+npm install zikra-slider-pro
+```
+
+Zikra Slider Pro runs in Vanilla JS, React, Next.js App Router and Vue 3 without owning your stack: one ~16 kB (gzip) file, seven layouts, an optional animation ladder (GSAP / anime.js / Motion One → WAAPI → CSS), and accessibility that is on by default instead of an add-on module. Prefer no build step? Use the [CDN snippet](#cdn) below.
 
 - **Small and auditable.** 16 kB gzipped, one ES module, no runtime dependencies, no build step required. Read the whole engine in an afternoon.
 - **Accessible by default.** Roles, labels, live-region announcements, `inert` off-screen slides, keyboard support and reduced-motion handling ship on; nothing extra to install or configure.
