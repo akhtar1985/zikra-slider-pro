@@ -1,4 +1,4 @@
-/*! Zikra Slider Pro v1.2.1 | MIT | zero dependencies */
+/*! Zikra Slider Pro v1.3.0 | MIT | zero dependencies */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
   else if (typeof define === 'function' && define.amd) define([], factory);
@@ -7,7 +7,7 @@
   'use strict';
 
 /*!
- * Zikra Slider Pro v1.2.1
+ * Zikra Slider Pro v1.3.0
  * Zero-dependency slider / carousel engine for Vanilla JS, React, Next.js and Vue 3.
  * MIT License.
  *
@@ -20,7 +20,7 @@
  * - Every animation backend (GSAP, anime.js, Motion One, WAAPI, CSS) receives
  *   the same from/to style descriptors, so falling back is just a strategy swap.
  */
-const VERSION = '1.2.1';
+const VERSION = '1.3.0';
 
 const TYPES = ['slide', 'fade', 'scale', 'coverflow', 'stack', 'cards', 'custom'];
 const AXES = ['x', 'y'];
