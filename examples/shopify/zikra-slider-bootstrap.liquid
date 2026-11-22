@@ -1,0 +1,58 @@
+{%- comment -%}
+  Zikra Slider Pro — Shopify bootstrap (v1.3.0)
+
+  Render once, e.g. right before </head> in layout/theme.liquid:
+    {% render 'zikra-slider-bootstrap' %}
+
+  Loads the pinned CDN files and initializes every slider section.
+  Handles the theme editor: sections re-init on shopify:section:load and
+  are destroyed on shopify:section:unload, so edits never stack instances.
+  Update the three version numbers below together.
+{%- endcomment -%}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikra-slider.css">
+<script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.min.js" defer></script>
+<script>
+  (() => {
+    if (window.__zikraShopify) return;
+    window.__zikraShopify = true;
+
+    const selector = '[data-zikra-slider]';
+
+    const boot = (scope) => {
+      if (!window.zikraslider) return;
+      (scope || document).querySelectorAll(selector).forEach((el) => {
+        if (window.zikraslider.get(el)) return;
+        let options = {};
+        try {
+          options = JSON.parse(el.getAttribute('data-zikra-options') || '{}');
+        } catch (error) {
+          options = {};
+        }
+        window.zikraslider(el, options);
+      });
+    };
+
+    const teardown = (scope) => {
+      if (!window.zikraslider) return;
+      scope.querySelectorAll(selector).forEach((el) => {
+        const instance = window.zikraslider.get(el);
+        if (instance) instance.destroy();
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => boot(document), { once: true });
+    } else {
+      boot(document);
+    }
+    window.addEventListener('load', () => boot(document), { once: true });
+
+    document.addEventListener('shopify:section:load', (event) => {
+      if (event.target instanceof Element) boot(event.target);
+    });
+    document.addEventListener('shopify:section:unload', (event) => {
+      if (event.target instanceof Element) teardown(event.target);
+    });
+  })();
+</script>

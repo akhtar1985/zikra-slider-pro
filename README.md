@@ -744,6 +744,16 @@ import ZikraSlider from './ZikraSlider.vue';
 
 The wrapper emits `ready` with the instance and exposes the imperative API (`next`, `goTo`, `update`, `getState`, …).
 
+### Shopify
+
+A drop-in section for Online Store 2.0 themes (Dawn and newer) lives in [examples/shopify](https://github.com/akhtar1985/zikra-slider-pro/tree/main/examples/shopify): a `zikra-slider.liquid` section with slides as blocks and merchant settings, plus a bootstrap snippet that loads the pinned CDN files once. Render the snippet from `layout/theme.liquid`:
+
+```liquid
+{% render 'zikra-slider-bootstrap' %}
+```
+
+Then add **Zikra Slider** from the theme editor. The bootstrap initializes every `[data-zikra-slider]` element, re-initializes it on `shopify:section:load` and calls `destroy()` on `shopify:section:unload`, so editor changes never stack instances. Full install steps: [examples/shopify/README.md](https://github.com/akhtar1985/zikra-slider-pro/blob/main/examples/shopify/README.md).
+
 ## CSS classes and variables
 
 Generated hooks:
@@ -816,7 +826,8 @@ zikra-slider-pro/
 │  ├─ assets/art-*.svg      # offline demo artwork
 │  ├─ react/ZikraSlider.jsx
 │  ├─ nextjs/ZikraSlider.jsx
-│  └─ vue/ZikraSlider.vue
+│  ├─ vue/ZikraSlider.vue
+│  └─ shopify/              # section + bootstrap snippet + install guide
 ├─ scripts/
 │  ├─ build.mjs             # esbuild-powered UMD/CJS/ESM build
 │  ├─ serve.mjs             # static demo server (no dependencies)
