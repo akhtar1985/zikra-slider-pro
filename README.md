@@ -34,21 +34,36 @@ Jump straight to a section:
 
 ## Why Zikra Slider Pro?
 
-Swiper is older, bigger, and has plugins Zikra does not. This project is a deliberate trade: a much smaller surface focused on accessible semantics, a clean destroy/restore lifecycle, and an animation backend you can swap.
+Swiper is older, bigger, and has modules Zikra does not. This project is a deliberate trade: a much smaller surface focused on accessible semantics, a clean destroy/restore lifecycle, and an animation backend you can swap. The tables below compare it with the main alternatives; every cell was checked against each project's docs, npm package and Bundlephobia on **2026-11-22**. All six libraries are MIT-licensed.
 
-| | Zikra Slider Pro | Swiper |
-| --- | --- | --- |
-| Size | ~16 kB gzip JS + 1.8 kB CSS | ~30–40 kB gzip depending on modules |
-| Runtime dependencies | None | None |
-| Accessibility | Roles, live region, `inert` off-screen slides, keyboard, reduced motion — on by default | ARIA roles and labels built in; no live-region announcements or `inert` off-screen slides |
-| Framework support | Vanilla, packaged React component, works directly in Next/Vue | React/Vue/Angular/Svelte wrappers |
-| Effects | 7 layouts + custom transform function; flip/stagger as transitions | cube, flip, coverflow, cards, creative, zoom and more |
-| Animation engines | GSAP / anime.js / Motion One → WAAPI → CSS | Built-in engine |
-| Virtual slides, huge datasets | Not built in | Yes |
-| Ecosystem | New and small | Large plugin and community ecosystem |
-| Lifecycle | Full DOM/ARIA restore on `destroy()` | `destroy()` available |
+| | Zikra Slider Pro | Swiper | Splide | Embla | Glide | Keen Slider |
+| --- | --- | --- | --- | --- | --- | --- |
+| npm downloads / week | 443 | 5.51M | 415k | 31.8M | 183k | 305k |
+| JS min+gzip | 16.6 kB + 1.9 kB CSS, everything included | 20.5 kB core, modules extra | 15.8 kB | 6.9 kB | 7.8 kB | 5.9 kB |
+| TypeScript types | built-in | built-in | built-in | built-in | none | built-in |
+| Framework wrappers | React packaged; Vue/Next.js examples | React, Vue, Web Component | none official | none official | none official | React, Vue, React Native |
+| Tree-shakeable | no (one ESM file) | yes (modules) | no (one bundle) | partial (plugin packages) | no | partial (no split) |
 
-**Choose Swiper** when you need virtual slides, dozens of plugins, or Angular/Svelte wrappers. **Choose Zikra** when you want a small engine you can read and audit, accessible behavior that cannot be forgotten, and motion that follows the libraries you already load.
+Capabilities ("module" = shipped separately, "plugin" = opt-in from the same project, "—" = use DOM edits + the project's reinit API):
+
+| | Zikra | Swiper | Splide | Embla | Glide | Keen |
+| --- | --- | --- | --- | --- | --- | --- |
+| Loop / infinite | built-in | built-in | built-in | built-in | rewind only | built-in |
+| Autoplay | built-in | module | built-in | plugin | built-in | no |
+| Thumbnails sync | built-in | module | manual `sync()` example | manual | manual | manual |
+| Virtual slides | no | module | no | `slidesInView` only | no | no |
+| Free / momentum drag | built-in `freeMode` | module | `drag: 'free'` | `dragFree` | no | `mode: 'free'` |
+| Responsive breakpoints | built-in | built-in | built-in | built-in | built-in | built-in |
+| RTL | built-in | partial (property + `changeLanguageDirection()`) | built-in | built-in | built-in | built-in |
+| Add / remove slides after init | `appendSlide` / `prependSlide` / `removeSlide` | same methods | `add` / `remove` / `refresh` | DOM + `reInit()` | DOM + `mount()` | DOM + `update()` |
+| Accessibility | roles, slide labels, live region, `inert` off-screen slides, keyboard, reduced motion — on by default | a11y module (opt-in): roles, slide labels, live-region announcements, `inert` off-screen slides | roles, landmarks, live region, keyboard, reduced-motion guidance (WAI-ARIA carousel pattern); no `inert` | not documented — write your own markup | keyboard only | not documented |
+| Effects | 7 layouts + `custom` transform | fade, cube, coverflow, flip, creative, cards (modules) | slide / loop / fade | fade (plugin) or CSS | none | none built-in |
+| Animation engines | GSAP / anime.js / Motion One → WAAPI → CSS | built-in | built-in | CSS | CSS | custom animator |
+| Ecosystem and lifecycle | new and small; full DOM/ARIA restore on `destroy()` | large ecosystem; `destroy()` | medium; `destroy()` | small, focused; `destroy()` | small; `destroy()` | small |
+
+Size figures come from Bundlephobia's default entry for each package; Swiper's excludes its optional modules, while Zikra's includes every layout and control. Download counts are the npm downloads API for the week ending 2026-11-21. Framework claims count only official wrappers; Keen's are type-checked packages shipped with the library.
+
+**Choose Swiper** for virtual slides, dozens of modules, or Angular/Svelte/WC wrappers. **Choose Splide** for a mature accessibility story with a bigger community. **Choose Embla or Keen** when you only need drag and will build the controls yourself. **Choose Zikra** when you want a small engine you can read and audit, runtime slide APIs out of the box, accessible behavior that cannot be forgotten, and motion that follows the libraries you already load.
 
 ## Design principles
 
