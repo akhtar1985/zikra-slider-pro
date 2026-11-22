@@ -10,9 +10,9 @@
 npm install zikra-slider-pro
 ```
 
-Zikra Slider Pro runs in Vanilla JS, React, Next.js App Router and Vue 3 without owning your stack: one ~16 kB (gzip) file, seven layouts, an optional animation ladder (GSAP / anime.js / Motion One → WAAPI → CSS), and accessibility that is on by default instead of an add-on module. Prefer no build step? Use the [CDN snippet](#cdn) below.
+Zikra Slider Pro runs in Vanilla JS, React, Next.js App Router and Vue 3 without owning your stack: one 16.6 kB (gzip) file, seven layouts, an optional animation ladder (GSAP / anime.js / Motion One → WAAPI → CSS), and accessibility that is on by default instead of an add-on module. Prefer no build step? Use the [CDN snippet](#cdn) below.
 
-- **Small and auditable.** 16 kB gzipped, one ES module, no runtime dependencies, no build step required. Read the whole engine in an afternoon.
+- **Small and auditable.** 16.6 kB gzipped, one ES module, no runtime dependencies, no build step required. Read the whole engine in an afternoon.
 - **Accessible by default.** Roles, labels, live-region announcements, `inert` off-screen slides, keyboard support and reduced-motion handling ship on; nothing extra to install or configure.
 - **Seven layouts, your motion.** `slide`, `fade`, `scale`, `coverflow`, `stack`, `cards`, or a `custom` transform function — on `x` or `y`, LTR or RTL, with built-in parallax.
 - **Brings its own fallbacks.** Uses GSAP, anime.js or Motion One when you already have them; degrades to the Web Animations API, then CSS.
@@ -530,12 +530,21 @@ slider.pause();
 slider.toggleAutoplay();
 slider.update({ slidesPerView: 2 });  // deep-merged, keeps the current index
 slider.recalculate();                 // re-measure after layout changes
+
+// Add or remove slides at runtime (targets, NodeLists/arrays, or HTML strings)
+slider.appendSlide('<div>New slide</div>');
+slider.prependSlide([el1, el2]);      // adds before the first slide, keeps the view
+slider.removeSlide(2);                // index, indexes, element or array
+slider.removeSlide([0, 4]);
+
 slider.getProgress();                 // 0…1
 slider.getState();                    // see below
 slider.on('afterChange', fn);
 slider.off('afterChange', fn);
 slider.destroy();                     // removes listeners/timers/observers and restores the DOM
 ```
+
+`appendSlide()` / `prependSlide()` / `removeSlide()` rebuild loop clones, arrows, bullets and screen-reader labels, and re-measure immediately. Appending keeps the current slide; prepending (or removing slides before the active one) shifts the index so the same slide stays in view. Removed elements are detached; appended elements stay in place after `destroy()` with their author classes restored. Always use these methods rather than inserting nodes into the track yourself — `recalculate()` re-measures but does not re-collect slides.
 
 `getState()` returns:
 

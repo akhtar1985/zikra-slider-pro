@@ -24,6 +24,8 @@ const options: ZikraSliderOptions = {
 const instance: ZikraSlider = zikraslider(document.createElement('div'), options);
 instance.next({ reason: 'test' }).prev().goTo(2, { speed: 0 });
 instance.update({ dir: 'rtl' });
+instance.appendSlide('<div class="slide">new</div>').prependSlide(document.createElement('div'));
+instance.removeSlide([0, 1]).removeSlide(document.createElement('div'));
 
 const state: ZikraSliderState = instance.getState();
 const backend: string | null = state.backend;

@@ -510,6 +510,19 @@ class ZikraSlider {
     return params;
   }
 
+  _snapshotSlide(slide) {
+    return {
+      className: slide.className,
+      style: slide.getAttribute('style'),
+      id: slide.getAttribute('id'),
+      role: slide.getAttribute('role'),
+      'aria-roledescription': slide.getAttribute('aria-roledescription'),
+      'aria-label': slide.getAttribute('aria-label'),
+      'aria-hidden': slide.getAttribute('aria-hidden'),
+      inert: slide.hasAttribute('inert')
+    };
+  }
+
   _setupDom() {
     const el = this.el;
     const c = this._cls;
@@ -524,16 +537,7 @@ class ZikraSlider {
     this._generated.push(this._viewport);
 
     this._slides = Array.from(el.children);
-    this._slideSnapshots = this._slides.map((slide) => ({
-      className: slide.className,
-      style: slide.getAttribute('style'),
-      id: slide.getAttribute('id'),
-      role: slide.getAttribute('role'),
-      'aria-roledescription': slide.getAttribute('aria-roledescription'),
-      'aria-label': slide.getAttribute('aria-label'),
-      'aria-hidden': slide.getAttribute('aria-hidden'),
-      inert: slide.hasAttribute('inert')
-    }));
+    this._slideSnapshots = this._slides.map((slide) => this._snapshotSlide(slide));
     this._slides.forEach((slide, i) => {
       if (!slide.classList.contains(c.slide)) slide.classList.add(c.slide);
       slide.setAttribute('data-zs-index', String(i));
@@ -2578,6 +2582,98 @@ class ZikraSlider {
     this._autoplayPlaying = !!this.params.features.autoplay.enabled;
     this._stoppedByUser = false;
     this._scheduleAutoplay();
+    return this;
+  }
+
+  appendSlide(slides) {
+    return this._insertSlides(slides, false);
+  }
+
+  prependSlide(slides) {
+    return this._insertSlides(slides, true);
+  }
+
+  removeSlide(slides) {
+    if (!this.ready || this.destroyed || !this._slides.length) return this;
+    const requested = (Array.isArray(slides) ? slides : [slides]).map((value) => (
+      typeof value === 'number' ? Math.trunc(value) : this._slides.indexOf(value)
+    ));
+    const indexes = Array.from(new Set(requested.filter((index) => index >= 0 && index < this._slides.length)))
+      .sort((a, b) => a - b);
+    if (!indexes.length) return this;
+
+    this._cancelAnimations();
+    this._resetParallax();
+    this._stopMomentum();
+    this._drag = null;
+
+    const drop = new Set(indexes);
+    this._slides.forEach((slide, index) => {
+      if (drop.has(index)) slide.remove();
+    });
+    this._slides = this._slides.filter((_, index) => !drop.has(index));
+    this._slideSnapshots = this._slideSnapshots.filter((_, index) => !drop.has(index));
+    const removedBefore = indexes.filter((index) => index < this._activeIndex).length;
+    this._activeIndex = Math.min(this._activeIndex - removedBefore, Math.max(0, this._slides.length - 1));
+    return this._syncSlideList();
+  }
+
+  _toSlideElements(input) {
+    if (!input) return [];
+    if (typeof input === 'string') {
+      const template = document.createElement('template');
+      template.innerHTML = input;
+      return Array.from(template.content.children);
+    }
+    if (input instanceof Element) return [input];
+    return Array.from(input).filter((node) => node && node.nodeType === 1);
+  }
+
+  _insertSlides(input, prepend) {
+    if (!this.ready || this.destroyed) return this;
+    const fresh = this._toSlideElements(input).filter((node) => !this._slides.includes(node));
+    if (!fresh.length) return this;
+
+    this._cancelAnimations();
+    this._resetParallax();
+    this._stopMomentum();
+    this._drag = null;
+
+    const snapshots = fresh.map((node) => this._snapshotSlide(node));
+    const c = this._cls;
+    if (!this._slides.length) {
+      fresh.forEach((node) => this._track.appendChild(node));
+    } else if (prepend) {
+      const anchor = this._slides[0];
+      fresh.forEach((node) => this._track.insertBefore(node, anchor));
+    } else {
+      const anchor = this._slides[this._slides.length - 1].nextSibling;
+      fresh.forEach((node) => this._track.insertBefore(node, anchor));
+    }
+    fresh.forEach((node) => node.classList.add(c.slide));
+
+    this._slides = prepend ? [...fresh, ...this._slides] : [...this._slides, ...fresh];
+    this._slideSnapshots = prepend ? [...snapshots, ...this._slideSnapshots] : [...this._slideSnapshots, ...snapshots];
+    // Keep the same content in view when slides are added before it.
+    if (prepend) this._activeIndex += fresh.length;
+    return this._syncSlideList();
+  }
+
+  _syncSlideList() {
+    this._realCount = this._slides.length;
+    this._baseSlideClasses = this._slides.map((slide) => slide.className);
+    this._baseSlideStyles = this._slides.map((slide) => slide.getAttribute('style'));
+    const a11y = this.params.features.a11y;
+    this._slides.forEach((slide, i) => {
+      slide.setAttribute('data-zs-index', String(i));
+      if (!a11y.enabled) return;
+      if (!slide.id) slide.id = `${this.id}-slide-${i}`;
+      slide.setAttribute('role', 'group');
+      slide.setAttribute('aria-roledescription', 'slide');
+      slide.setAttribute('aria-label', `${i + 1} of ${this._realCount}`);
+    });
+    this.recalculate();
+    if (this.params.sync && this.params.sync.with) this._resolveSyncTargets(true);
     return this;
   }
 

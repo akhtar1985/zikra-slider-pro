@@ -214,6 +214,8 @@ export interface ZikraSliderState {
   backend: ZikraSliderBackend;
 }
 
+export type ZikraSliderSlidesInput = string | Element | Element[] | NodeListOf<Element>;
+
 export declare class ZikraSlider {
   constructor(target: ZikraSliderTarget, options?: ZikraSliderOptions);
 
@@ -232,6 +234,9 @@ export declare class ZikraSlider {
   goTo(index: number, options?: ZikraSliderNavigationOptions): this;
   next(options?: ZikraSliderNavigationOptions): this;
   prev(options?: ZikraSliderNavigationOptions): this;
+  appendSlide(slides: ZikraSliderSlidesInput): this;
+  prependSlide(slides: ZikraSliderSlidesInput): this;
+  removeSlide(slides: number | number[] | Element | Element[]): this;
   play(): this;
   pause(): this;
   toggleAutoplay(): this;
