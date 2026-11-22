@@ -418,6 +418,7 @@ class ZikraSlider {
     this._pluginList = [];
     this._breakpointListeners = [];
     this._mediaLoadListeners = [];
+    this._mediaMarks = [];
     this._waapi = [];
     this._timers = new Set();
     this._controlListeners = [];
@@ -1336,6 +1337,7 @@ class ZikraSlider {
       slide.querySelectorAll('img').forEach((img) => {
         if (img.getAttribute('data-zs-media') === '1') return;
         img.setAttribute('data-zs-media', '1');
+        this._mediaMarks.push(img);
         const onLoad = () => this._requestRecalc();
         const onError = () => {
           const handler = this.params.fallback.onMediaError;
@@ -2767,6 +2769,10 @@ class ZikraSlider {
     this._stopMomentum();
     this._destroyBreakpoints();
     this._disconnectMedia();
+    this._mediaMarks.forEach((img) => {
+      if (img && img.getAttribute('data-zs-media') === '1') img.removeAttribute('data-zs-media');
+    });
+    this._mediaMarks = [];
     if (this._announceTimer) {
       clearTimeout(this._announceTimer);
       this._timers.delete(this._announceTimer);

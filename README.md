@@ -30,7 +30,11 @@ Jump straight to a section:
 - [Hero & thumbnails](https://akhtar1985.github.io/zikra-slider-pro/examples/#hero) — loop, autoplay, synced thumbnail strip, parallax captions
 - [Gallery](https://akhtar1985.github.io/zikra-slider-pro/examples/#gallery) — lazy images, fraction bullets, progress-synced filmstrip
 - [Effects](https://akhtar1985.github.io/zikra-slider-pro/examples/#effects) — fade, coverflow with GSAP fallback, stacked cards
-- [Playground](https://akhtar1985.github.io/zikra-slider-pro/examples/#playground) — drag, wheel, breakpoints, `destroy()` → rebuild
+- [Engines](https://akhtar1985.github.io/zikra-slider-pro/examples/#engines) — switch between CSS, WAAPI, anime.js and Motion One on one slider
+- [Slides at runtime](https://akhtar1985.github.io/zikra-slider-pro/examples/#slides) — live `appendSlide` / `prependSlide` / `removeSlide`
+- [Accessibility](https://akhtar1985.github.io/zikra-slider-pro/examples/#a11y) — ARIA roles, live region, inert off-screen slides, keyboard, reduced motion
+- [Lifecycle](https://akhtar1985.github.io/zikra-slider-pro/examples/#lifecycle) — inspect the DOM/ARIA before and after `destroy()`, then rebuild
+- [Playground](https://akhtar1985.github.io/zikra-slider-pro/examples/#playground) — drag, wheel, breakpoints, live state, `destroy()` → rebuild
 
 ## Why Zikra Slider Pro?
 
@@ -899,7 +903,7 @@ npm run typecheck  # validates the TypeScript declarations
 npm run lint       # eslint flat config (engine, React component, scripts, tests)
 ```
 
-The suite covers init/a11y, navigation and cancellation, loop wrap, layout transforms, parallax restoration, `custom` transforms, `update()`/`destroy()` markup restoration, autoplay state, pointer drag gestures (threshold, commit, snap-back, RTL, controls, `pointercancel`), and the packaged React component.
+The suite covers init/a11y, navigation and cancellation, loop wrap, layout transforms, parallax restoration, `custom` transforms, runtime `appendSlide`/`prependSlide`/`removeSlide`, `update()`/`destroy()` markup restoration (including engine-set media markers), autoplay state, pointer drag gestures (threshold, commit, snap-back, RTL, controls, `pointercancel`), and the packaged React component.
 
 ## Continuous integration
 
@@ -911,7 +915,11 @@ The demo exercises the deliverable set in one page:
 2. **Gallery** — lazy images, fraction bullets with a custom formatter, progress-synced filmstrip, clickable thumbnails and parallax artwork.
 3. **Effects** — fade (CSS), coverflow requesting a missing GSAP (`fallback: 'waapi'`, backend badge updates live), and a stacked-card type.
 4. **Engines** — one slider switched live between CSS → WAAPI → anime.js (v4 UMD) → Motion One, loading each library from jsDelivr on demand, with the live `getState().backend` and the exact options snippet.
-5. **Playground** — free-mode drag, wheel, responsive breakpoints, live `getState()`, cancellable `beforeChange`, RTL update, and a real `destroy()` → rebuild cycle with the event log.
+5. **Slides at runtime** — `appendSlide` / `prependSlide` / `removeSlide` on a non-looping slider, with the active index kept in view, re-numbered ARIA labels and a live state panel.
+6. **Accessibility** — an inspector showing the generated `role`/`aria-roledescription`, per-slide labels, the `aria-hidden` + `inert` pair on off-screen slides, the polite live region, real keyboard navigation and the current `prefers-reduced-motion` result.
+7. **Lifecycle** — a before/after report of the host's generated nodes, ARIA attributes, tabindex and normalized markup across `destroy()` and re-init, proving the restore is byte-identical.
+8. **Playground** — free-mode drag, wheel, responsive breakpoints, live `getState()`, cancellable `beforeChange`, RTL update, and a real `destroy()` → rebuild cycle with the event log.
+9. **Quick start** — copy-paste markup and the exact options used by the page.
 
 The page loads only `dist/zikra-slider.css` and `dist/zikraslider.umd.js`; demo code never imports internals. Artwork is generated SVG, so everything except the optional engine scripts works offline.
 

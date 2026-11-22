@@ -23,6 +23,9 @@
         <a href="#gallery">Sync</a>
         <a href="#effects">Effects</a>
         <a href="#engines">Engines</a>
+        <a href="#slides">Slides</a>
+        <a href="#a11y">A11y</a>
+        <a href="#lifecycle">Lifecycle</a>
         <a href="#playground">API</a>
         <a href="#quickstart">Quick start</a>
       </nav>
@@ -32,7 +35,7 @@
 
   <main id="top">
     <!-- ============================================================ HERO -->
-    <section class="section" aria-labelledby="hero-title">
+    <section class="section" id="hero" aria-labelledby="hero-title">
       <div class="wrap">
         <div class="section-head">
           <div>
@@ -44,7 +47,7 @@
         </div>
 
         <div class="hero-shell">
-          <div id="hero" class="zs-slider zs-no-js hero-slider" aria-label="Zikra Slider Pro highlights">
+          <div id="hero-slider" class="zs-slider zs-no-js hero-slider" aria-label="Zikra Slider Pro highlights">
             <div class="zs-slide">
               <figure class="hero-shot">
                 <img src="./assets/art-1.svg" alt="Indigo and cyan gradient artwork" width="1600" height="1000">
@@ -328,12 +331,146 @@
       </div>
     </section>
 
+    <!-- =========================================================== SLIDES -->
+    <section class="section" id="slides" aria-labelledby="slides-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">05 — Slides at runtime</span>
+            <h2 id="slides-title">Add and remove slides after init.</h2>
+            <p><code>appendSlide()</code>, <code>prependSlide()</code> and <code>removeSlide()</code> accept an HTML string, an element or a NodeList — removal also takes an index. Counts, slide labels, bullets and the active slide stay in sync, and a prepend keeps the current slide in view.</p>
+          </div>
+          <span class="badge">appendSlide · prependSlide</span>
+        </div>
+
+        <div class="playground">
+          <div class="panel stage">
+            <div id="slideapi" class="zs-slider zs-no-js play-slider" aria-label="Runtime slide API demo">
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="play-copy"><h4>Original 01</h4><p>in the markup</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-2.svg" alt="Amber art"><div class="play-copy"><h4>Original 02</h4><p>in the markup</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="play-copy"><h4>Original 03</h4><p>in the markup</p></div></div></div>
+            </div>
+
+            <div class="control-bar" role="group" aria-label="Runtime slide operations">
+              <button class="btn" data-slide-op="prepend" type="button">Prepend slide</button>
+              <button class="btn" data-slide-op="append" type="button">Append slide</button>
+              <button class="btn danger" data-slide-op="remove" type="button">Remove current</button>
+              <span class="engine-hint">HTML string · element · index</span>
+            </div>
+          </div>
+
+          <aside class="panel console" aria-label="Slide API state and calls">
+            <div>
+              <h3>getState()</h3>
+              <dl class="state-grid" id="slideapi-state"></dl>
+            </div>
+            <div>
+              <h4>Calls</h4>
+              <ul class="log" id="slideapi-log" aria-live="off"></ul>
+            </div>
+            <pre class="code-block"><code><span class="k">const</span> slider = zikraslider(<span class="s">'#slider'</span>, { loop: <span class="n">false</span> });
+
+slider.appendSlide(<span class="s">'&lt;div class="card"&gt;New&lt;/div&gt;'</span>);
+slider.prependSlide(element);  <span class="c">// current slide stays in view</span>
+slider.removeSlide(<span class="n">2</span>);  <span class="c">// index, element, or array</span>
+
+slider.getState().total;  <span class="c">// 3 → 4 → 5 → 4</span></code></pre>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ A11Y -->
+    <section class="section" id="a11y" aria-labelledby="a11y-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">06 — Accessibility</span>
+            <h2 id="a11y-title">Accessible before you ask.</h2>
+            <p>On by default: a labelled region, slide groups announced as “n of m”, a polite live region, <code>inert</code> + <code>aria-hidden</code> off-screen slides, arrow-key control while focused, and a reduced-motion path. Enable nothing; the inspector updates as you move.</p>
+          </div>
+          <span class="badge">a11y: on</span>
+        </div>
+
+        <div class="playground">
+          <div class="panel stage">
+            <div id="a11y-slider" class="zs-slider zs-no-js play-slider" aria-label="Accessibility demo slider">
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-4.svg" alt="Green art"><div class="play-copy"><h4>Region</h4><p>role + aria-roledescription</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-5.svg" alt="Violet art"><div class="play-copy"><h4>Groups</h4><p>“2 of 4”, one per slide</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-6.svg" alt="Blue art"><div class="play-copy"><h4>Live region</h4><p>“Slide 3 of 4” (polite)</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-7.svg" alt="Orchid art"><div class="play-copy"><h4>Inert</h4><p>off-screen slides leave the tab order</p></div></div></div>
+            </div>
+
+            <div class="control-bar" role="group" aria-label="Accessibility demo controls">
+              <button class="btn" data-a11y-op="focus" type="button">Focus slider</button>
+              <button class="btn ghost" data-a11y-op="prev" type="button">← Prev</button>
+              <button class="btn ghost" data-a11y-op="next" type="button">Next →</button>
+              <span class="engine-hint">Tab reaches the slider · ← → Home End</span>
+            </div>
+          </div>
+
+          <aside class="panel console" aria-label="Live ARIA inspector">
+            <div>
+              <h3>ARIA inspector</h3>
+              <dl class="state-grid wide" id="a11y-inspector"></dl>
+            </div>
+            <p class="engine-note">Focus the slider and press <code>ArrowRight</code> and <code>End</code>. Screen readers hear the live-region text; keyboard users never land inside a hidden slide.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== LIFECYCLE -->
+    <section class="section" id="lifecycle" aria-labelledby="lifecycle-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">07 — Lifecycle</span>
+            <h2 id="lifecycle-title">new, then destroy — markup comes back.</h2>
+            <p>The factory and the constructor return the same instance. <code>destroy()</code> stops timers, removes generated controls and ARIA, and restores your class, id, inline style and slide attributes, so re-initialising — or leaving the page — is clean.</p>
+          </div>
+          <span class="badge">new zikraslider()</span>
+        </div>
+
+        <div class="playground">
+          <div class="panel stage">
+            <div id="lifecycle-slider" class="zs-slider zs-no-js play-slider" aria-label="Lifecycle demo slider" style="--zs-radius: 16px;">
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-8.svg" alt="Ember art"><div class="play-copy"><h4>One instance</h4><p>constructed with new</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="play-copy"><h4>destroy()</h4><p>markup restored</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="play-copy"><h4>Re-init</h4><p>no stale listeners</p></div></div></div>
+            </div>
+
+            <div class="control-bar" role="group" aria-label="Lifecycle controls">
+              <button class="btn" data-lifecycle-op="destroy" type="button">Destroy instance</button>
+              <button class="btn ghost" data-lifecycle-op="new" type="button">New instance</button>
+              <span class="engine-hint">16.6 kB gzip · 0 dependencies</span>
+            </div>
+            <div class="engine-foot">
+              <span id="lifecycle-status">instance: live</span>
+              <span class="badge" id="lifecycle-badge">zikraslider.get() → instance</span>
+            </div>
+          </div>
+
+          <aside class="panel console" aria-label="Lifecycle restore report">
+            <div>
+              <h3>Restore report</h3>
+              <dl class="state-grid wide" id="lifecycle-report"></dl>
+            </div>
+            <pre class="code-block"><code><span class="k">const</span> slider = <span class="k">new</span> zikraslider(<span class="s">'#lifecycle-slider'</span>, options);
+
+slider.destroy();            <span class="c">// DOM + ARIA restored</span>
+zikraslider.get(<span class="s">'#lifecycle-slider'</span>); <span class="c">// null</span></code></pre>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <!-- ====================================================== PLAYGROUND -->
     <section class="section" id="playground" aria-labelledby="play-title">
       <div class="wrap">
         <div class="section-head">
           <div>
-            <span class="eyebrow">05 — Runtime API</span>
+            <span class="eyebrow">08 — Runtime API</span>
             <h2 id="play-title">Drive it. Break it. Rebuild it.</h2>
             <p>Free-mode dragging, wheel input, responsive breakpoints, live <code>update()</code>, cancellable <code>beforeChange</code>, and a genuine <code>destroy()</code> / re-init cycle.</p>
           </div>
@@ -380,7 +517,7 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <span class="eyebrow">06 — Integration</span>
+            <span class="eyebrow">09 — Integration</span>
             <h2 id="quick-title">Two calls, one lifecycle.</h2>
             <p>Install with <code>npm install zikra-slider-pro</code>, then call it as a factory or with <code>new</code>. Both return the same instance, with <code>update()</code>, <code>on()</code> and <code>destroy()</code> ready.</p>
           </div>

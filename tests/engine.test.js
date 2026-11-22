@@ -180,6 +180,15 @@ describe('update and destroy', () => {
     expect(again.getState().total).toBe(5);
     expect(zikraslider.get(el)).toBe(again);
   });
+
+  it('removes its own media markers from slide images', () => {
+    const { el, instance } = mount(2, {}, () => '<img alt="art" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">');
+    const img = el.querySelector('.zs-slide img');
+    expect(img.getAttribute('data-zs-media')).toBe('1');
+    instance.destroy();
+    live.pop();
+    expect(img.getAttribute('data-zs-media')).toBeNull();
+  });
 });
 
 describe('animation backends', () => {

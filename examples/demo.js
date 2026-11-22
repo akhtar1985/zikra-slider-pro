@@ -12,7 +12,7 @@
 
   /* ================================================================ hero */
 
-  const hero = zs('#hero', {
+  const hero = zs('#hero-slider', {
     type: 'slide',
     loop: true,
     slidesPerView: 1,
@@ -355,6 +355,245 @@
   if (engineNote) engineNote.textContent = ENGINE_NOTES[engineChoice];
   syncEngineStatus();
 
+  /* ============================================================== slides */
+
+  const slideApi = zs('#slideapi', {
+    type: 'slide',
+    loop: false,
+    gap: 12,
+    speed: 460,
+    initialSlide: 0,
+    arrows: { enabled: true, ariaPrevLabel: 'Previous slide', ariaNextLabel: 'Next slide' },
+    bullets: { enabled: true, clickable: true },
+    features: {
+      autoplay: { enabled: false },
+      drag: { enabled: true },
+      keyboard: { enabled: true, onlyWhenFocused: true },
+      a11y: { liveRegion: false }
+    },
+    animation: { library: 'none', effect: 'slide', fallback: 'css' }
+  });
+
+  const slideStateEl = byId('slideapi-state');
+  const slideLogEl = byId('slideapi-log');
+  const SLIDE_ART = [4, 5, 6, 7, 8, 1, 2, 3];
+  let slideSerial = 3;
+  let slideCallCount = 0;
+
+  function renderSlideState() {
+    if (!slideStateEl) return;
+    const state = slideApi.getState();
+    const rows = [
+      ['slides', String(state.total)],
+      ['index', `${state.index + 1} / ${state.total}`],
+      ['loop', String(state.isLooping)],
+      ['backend', state.backend || 'n/a']
+    ];
+    slideStateEl.replaceChildren(...rows.map(([key, value]) => {
+      const cell = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = key;
+      dd.textContent = value;
+      cell.append(dt, dd);
+      return cell;
+    }));
+    const remove = document.querySelector('[data-slide-op="remove"]');
+    if (remove) remove.disabled = state.total <= 1;
+  }
+
+  function slideCall(name, detail) {
+    if (!slideLogEl) return;
+    slideCallCount += 1;
+    const li = document.createElement('li');
+    const time = document.createElement('time');
+    time.textContent = `${String(slideCallCount).padStart(2, '0')} ·`;
+    const label = document.createElement('b');
+    label.textContent = name;
+    li.append(time, label);
+    if (detail) li.append(document.createTextNode(` ${detail}`));
+    slideLogEl.appendChild(li);
+  }
+
+  function newSlideMarkup(mode) {
+    slideSerial += 1;
+    const art = SLIDE_ART[(slideSerial - 4) % SLIDE_ART.length];
+    return `<div class="zs-slide"><div class="play-card"><img src="./assets/art-${art}.svg" alt="Artwork ${slideSerial}"><div class="play-copy"><h4>Runtime ${String(slideSerial).padStart(2, '0')}</h4><p>${mode} at runtime</p></div></div></div>`;
+  }
+
+  document.querySelectorAll('[data-slide-op]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const op = button.getAttribute('data-slide-op');
+      if (op === 'append') {
+        slideApi.appendSlide(newSlideMarkup('appended'));
+        slideCall('appendSlide', `total → ${slideApi.getState().total}`);
+      } else if (op === 'prepend') {
+        slideApi.prependSlide(newSlideMarkup('prepended'));
+        slideCall('prependSlide', `total → ${slideApi.getState().total} · current kept`);
+      } else if (op === 'remove') {
+        const state = slideApi.getState();
+        if (state.total <= 1) {
+          slideCall('removeSlide', 'ignored — the last slide stays');
+        } else {
+          slideApi.removeSlide(state.index);
+          slideCall('removeSlide', `index ${state.index + 1} · total → ${slideApi.getState().total}`);
+        }
+      }
+      renderSlideState();
+    });
+  });
+
+  slideApi.on('afterChange', renderSlideState);
+  renderSlideState();
+
+  /* ================================================================ a11y */
+
+  const a11yHost = byId('a11y-slider');
+  const a11yDemo = zs(a11yHost, {
+    type: 'slide',
+    loop: false,
+    gap: 12,
+    speed: 420,
+    initialSlide: 0,
+    arrows: { enabled: true, ariaPrevLabel: 'Previous slide', ariaNextLabel: 'Next slide' },
+    bullets: { enabled: true, clickable: true },
+    features: {
+      autoplay: { enabled: false },
+      drag: { enabled: true },
+      keyboard: { enabled: true, onlyWhenFocused: true },
+      a11y: { liveRegion: true }
+    },
+    animation: { library: 'none', effect: 'slide', fallback: 'css' }
+  });
+
+  const a11yInspectorEl = byId('a11y-inspector');
+  const reducedQuery = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : null;
+
+  function renderA11y() {
+    if (!a11yInspectorEl) return;
+    const state = a11yDemo.getState();
+    const slides = Array.from(a11yHost.querySelectorAll('.zs-slide'));
+    const active = slides[state.index];
+    const neighbour = slides[(state.index + 1) % slides.length];
+    const inert = slides.filter((slide) => slide.inert || slide.hasAttribute('inert')).length;
+    const live = a11yHost.querySelector('[aria-live]');
+    const rows = [
+      ['host', `${a11yHost.getAttribute('role')} · ${a11yHost.getAttribute('aria-roledescription')}`],
+      ['tabindex', a11yHost.getAttribute('tabindex') || 'missing'],
+      ['active label', active ? active.getAttribute('aria-label') : '—'],
+      ['active aria-hidden', active ? (active.getAttribute('aria-hidden') || 'no') : '—'],
+      ['next slide inert', neighbour ? String(neighbour.inert || neighbour.hasAttribute('inert')) : '—'],
+      ['inert slides', `${inert} / ${slides.length}`],
+      ['live region', live ? (live.textContent || '(empty until a change)') : 'missing'],
+      ['reduced motion', reducedQuery && reducedQuery.matches ? 'reduce → fade ≤ 220 ms' : 'no-preference → full motion']
+    ];
+    a11yInspectorEl.replaceChildren(...rows.map(([key, value]) => {
+      const cell = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = key;
+      dd.textContent = value;
+      cell.append(dt, dd);
+      return cell;
+    }));
+  }
+
+  a11yDemo.on('afterChange', () => {
+    renderA11y();
+    window.setTimeout(renderA11y, 180);
+  });
+  if (reducedQuery && typeof reducedQuery.addEventListener === 'function') {
+    reducedQuery.addEventListener('change', renderA11y);
+  }
+  document.querySelectorAll('[data-a11y-op]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const op = button.getAttribute('data-a11y-op');
+      if (op === 'focus') a11yHost.focus();
+      else if (op === 'prev') a11yDemo.prev({ reason: 'button' });
+      else if (op === 'next') a11yDemo.next({ reason: 'button' });
+    });
+  });
+  renderA11y();
+
+  /* =========================================================== lifecycle */
+
+  const lifecycleHost = byId('lifecycle-slider');
+  const lifecycleReportEl = byId('lifecycle-report');
+  const lifecycleStatusEl = byId('lifecycle-status');
+  const lifecycleBadgeEl = byId('lifecycle-badge');
+  const normalizeMarkup = (html) => html.replace(/>\s+</g, '><').trim();
+  // Snapshot the author markup before the engine touches it.
+  const lifecycleOriginal = normalizeMarkup(lifecycleHost.outerHTML);
+
+  function lifecycleOptions() {
+    return {
+      type: 'slide',
+      loop: false,
+      gap: 12,
+      speed: 460,
+      initialSlide: 0,
+      arrows: { enabled: true, ariaPrevLabel: 'Previous slide', ariaNextLabel: 'Next slide' },
+      bullets: { enabled: true, clickable: true },
+      features: {
+        autoplay: { enabled: false },
+        drag: { enabled: true },
+        keyboard: { enabled: true, onlyWhenFocused: true },
+        a11y: { liveRegion: true }
+      },
+      animation: { library: 'none', effect: 'slide', fallback: 'css' }
+    };
+  }
+
+  let lifecycle = new zs(lifecycleHost, lifecycleOptions());
+
+  function renderLifecycle() {
+    const live = !!zs.get(lifecycleHost);
+    const html = normalizeMarkup(lifecycleHost.outerHTML);
+    const restored = !live && html === lifecycleOriginal;
+    const generated = lifecycleHost.querySelectorAll('.zs-viewport, .zs-arrow, .zs-bullets, [aria-live]').length;
+    const aria = lifecycleHost.querySelectorAll('[role], [aria-roledescription], [aria-hidden]').length;
+    const rows = [
+      ['instance', live ? 'live (new)' : 'none'],
+      ['get()', live ? 'instance' : 'null'],
+      ['generated DOM', `${generated} nodes`],
+      ['ARIA attributes', `${aria} in host`],
+      ['host tabindex', lifecycleHost.getAttribute('tabindex') || 'none'],
+      ['markup identical', live ? '— live' : restored ? 'yes' : 'no']
+    ];
+    if (lifecycleReportEl) {
+      lifecycleReportEl.replaceChildren(...rows.map(([key, value]) => {
+        const cell = document.createElement('div');
+        const dt = document.createElement('dt');
+        const dd = document.createElement('dd');
+        dt.textContent = key;
+        dd.textContent = value;
+        cell.append(dt, dd);
+        return cell;
+      }));
+    }
+    if (lifecycleStatusEl) {
+      lifecycleStatusEl.textContent = live ? 'instance: live · destroy() to restore' : 'instance: destroyed · markup restored';
+    }
+    if (lifecycleBadgeEl) {
+      lifecycleBadgeEl.textContent = live ? 'zikraslider.get() → instance' : 'zikraslider.get() → null';
+    }
+  }
+
+  document.querySelectorAll('[data-lifecycle-op]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const op = button.getAttribute('data-lifecycle-op');
+      if (op === 'destroy') {
+        if (lifecycle && !lifecycle.destroyed) lifecycle.destroy();
+      } else if (op === 'new') {
+        if (!zs.get(lifecycleHost)) lifecycle = new zs(lifecycleHost, lifecycleOptions());
+      }
+      renderLifecycle();
+    });
+  });
+  renderLifecycle();
+
   /* ========================================================== playground */
 
   const stateEl = byId('state');
@@ -532,5 +771,15 @@
   });
 
   // Expose for manual poking in DevTools.
-  window.demo = { hero, heroThumbs, gallery, coverflow, engineSlider, get play() { return play; } };
+  window.demo = {
+    hero,
+    heroThumbs,
+    gallery,
+    coverflow,
+    engineSlider,
+    slideApi,
+    a11yDemo,
+    get lifecycle() { return lifecycle; },
+    get play() { return play; }
+  };
 })();
