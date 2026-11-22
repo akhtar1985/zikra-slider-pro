@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accessible carousel: ARIA, inert and live regions — Zikra Slider Pro</title>
+  <meta name="description" content="How to build an accessible carousel: roles, slide labels, inert off-screen slides, polite live-region announcements, keyboard support and reduced motion.">
+  <link rel="canonical" href="https://akhtar1985.github.io/zikra-slider-pro/examples/accessible-carousel.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-family='sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='%23070912'%3Ez%3C/text%3E%3C/svg%3E">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Zikra Slider Pro">
+  <meta property="og:title" content="How to build an accessible carousel">
+  <meta property="og:description" content="ARIA roles, per-slide labels, inert off-screen slides, live-region announcements, keyboard support and reduced motion — with a live demo.">
+  <meta property="og:url" content="https://akhtar1985.github.io/zikra-slider-pro/examples/accessible-carousel.html">
+  <meta property="og:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to build an accessible carousel">
+  <meta name="twitter:description" content="Roles, labels, inert, live regions, keyboard and reduced motion — on by default in Zikra Slider Pro.">
+  <meta name="twitter:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <link rel="stylesheet" href="../dist/zikra-slider.css">
+  <link rel="stylesheet" href="./demo.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "How to build an accessible carousel, step by step",
+    "description": "ARIA roles, per-slide labels, inert off-screen slides, polite live-region announcements, keyboard support and reduced motion for carousels.",
+    "datePublished": "2026-11-22",
+    "dateModified": "2026-11-22",
+    "author": { "@type": "Person", "name": "Zikra" },
+    "publisher": { "@type": "Organization", "name": "Zikra Slider Pro" },
+    "mainEntityOfPage": "https://akhtar1985.github.io/zikra-slider-pro/examples/accessible-carousel.html",
+    "image": "https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need to add ARIA attributes to a carousel myself?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not with Zikra Slider Pro. On init it sets role=region and aria-roledescription=carousel on the host, and role=group, aria-roledescription=slide and an 'n of m' aria-label on every real slide. Add an aria-label to the host to name the carousel; everything else has a working default."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does an accessible carousel use both aria-hidden and inert?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "aria-hidden removes an element from the accessibility tree, while inert also blocks focus and pointer events. Used together on off-screen and cloned slides, keyboard and screen-reader users cannot reach content that is not visible. The active slide stays interactive."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are slide changes announced to screen readers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A visually hidden polite live region receives 'Slide n of m' after each change, debounced by 120 ms. Set features.a11y.liveRegion to false when you already provide your own status text."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the carousel respect prefers-reduced-motion?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. When the user prefers reduced motion, the engine swaps the layout transition for a fade; fallback.reducedMotion defaults to 'fade'. The demo's accessibility inspector shows the current media-query result."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">z</span>
+        <span>Zikra Slider Pro<small>zero dependencies</small></span>
+      </a>
+      <nav class="nav" aria-label="Guide pages">
+        <a href="./">Demo</a>
+        <a href="./swiper-alternatives.html">Alternatives</a>
+        <a href="./accessible-carousel.html" aria-current="page">Accessibility</a>
+        <a href="./zero-dependency-carousel.html">Zero deps</a>
+      </nav>
+      <span class="chip"><span class="dot"></span>v1.3.3 · guide</span>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <article class="doc">
+        <span class="eyebrow">Guide · Accessibility</span>
+        <h1>How to build an accessible carousel, step by step</h1>
+        <p class="lede">A carousel is a list of panels wrapped in controls. Screen readers, keyboards and reduced-motion users need that structure to survive the wrapping. This guide covers the WAI-ARIA carousel pattern and the defaults Zikra Slider Pro applies — with no extra markup.</p>
+        <p class="meta"><span>Updated 2026-11-22</span><span>8 min read</span><span><a href="./#a11y">Live a11y demo</a></span></p>
+
+        <h2>The pattern in plain language</h2>
+        <ul>
+          <li><b>The carousel is a landmark</b> with a name, not a generic pile of <code>div</code>s.</li>
+          <li><b>Each slide is a group</b> with a position label such as "2 of 5".</li>
+          <li><b>Off-screen slides are not reachable</b> — neither by tab nor by screen-reader cursor.</li>
+          <li><b>Page changes are announced politely</b>, without stealing focus.</li>
+          <li><b>Keyboard users can drive it</b> from the carousel itself.</li>
+          <li><b>Motion is optional</b> and honors <code>prefers-reduced-motion</code>.</li>
+        </ul>
+
+        <h2>What Zikra generates for you</h2>
+        <table>
+          <thead>
+            <tr><th>Requirement</th><th>Default behavior</th><th>Option</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Landmark and name</td><td><code>role="region"</code> + <code>aria-roledescription="carousel"</code>; your host <code>aria-label</code> is kept</td><td><code>features.a11y.roleDescription</code></td></tr>
+            <tr><td>Slide groups</td><td><code>role="group"</code>, <code>aria-roledescription="slide"</code>, <code>aria-label="n of m"</code> — renumbered when slides are added or removed</td><td>automatic</td></tr>
+            <tr><td>Focusable carousel</td><td><code>tabindex="0"</code> on the host so keyboard users can reach the arrow-key controls</td><td>automatic</td></tr>
+            <tr><td>Off-screen isolation</td><td><code>aria-hidden="true"</code> + <code>inert</code> on hidden and cloned slides</td><td>automatic</td></tr>
+            <tr><td>Announcements</td><td>Visually hidden polite live region: "Slide n of m"</td><td><code>features.a11y.liveRegion</code></td></tr>
+            <tr><td>Keyboard</td><td>← → ↑ ↓ Home End PageUp PageDown, when the carousel is focused</td><td><code>features.keyboard</code></td></tr>
+            <tr><td>Reduced motion</td><td>Layout transition replaced by a fade</td><td><code>fallback.reducedMotion</code></td></tr>
+          </tbody>
+        </table>
+        <p>All of it is on by default. You can name the carousel and walk away:</p>
+        <pre class="code-block"><code>&lt;div id=<span class="s">"hero"</span> class=<span class="s">"zs-slider zs-no-js"</span> aria-label=<span class="s">"Featured products"</span>&gt;
+  &lt;div class=<span class="s">"zs-slide"</span>&gt;…&lt;/div&gt;
+  &lt;div class=<span class="s">"zs-slide"</span>&gt;…&lt;/div&gt;
+  &lt;div class=<span class="s">"zs-slide"</span>&gt;…&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  zikraslider(<span class="s">'#hero'</span>, { type: <span class="s">'slide'</span>, loop: <span class="n">true</span> });
+&lt;/script&gt;</code></pre>
+
+        <h2>Why both <code>aria-hidden</code> and <code>inert</code>?</h2>
+        <p><code>aria-hidden="true"</code> removes an element from the accessibility tree, but its focusable children can still be reached with Tab. <code>inert</code> makes the subtree non-interactive and unfocusable. Carousels need the pair: <code>aria-hidden</code> stops the screen reader from reading slides that are visually off-screen, and <code>inert</code> stops keyboard focus from disappearing into them. Cloned slides, added for seamless looping, get both from the start.</p>
+        <div class="callout">The active slide stays fully interactive; only off-screen and cloned slides are hidden and inert. When a slide becomes active, both attributes are removed in the same update that moves it into view.</div>
+
+        <h2>Keyboard support</h2>
+        <p>The host is focusable and listens only when focused by default (<code>onlyWhenFocused: true</code>), so arrow keys still scroll the page elsewhere. The map is:</p>
+        <ul>
+          <li><b>← / →</b> and <b>↑ / ↓</b> — previous / next slide.</li>
+          <li><b>Home / End</b> — first / last slide.</li>
+          <li><b>PageUp / PageDown</b> — jump by a page.</li>
+        </ul>
+        <p>Set <code>features.keyboard.onlyWhenFocused</code> to <code>false</code> only if the slider is the page's single primary interaction.</p>
+
+        <h2>Announcements without noise</h2>
+        <p>After a change, a visually hidden <code>aria-live="polite"</code> region receives "Slide n of m". Updates are debounced by 120 ms so fast drags and autoplay do not flood the screen reader. If your page already has a status line or the slider is decorative, pass <code>features.a11y.liveRegion: false</code>.</p>
+
+        <h2>Reduced motion</h2>
+        <p>When <code>prefers-reduced-motion: reduce</code> matches, the engine does not run the layout transition; it fades instead (<code>fallback.reducedMotion</code> defaults to <code>'fade'</code>). Autoplay remains off by default — motion that starts on its own is a separate accessibility problem.</p>
+
+        <h2>Try it</h2>
+        <p>Focus the slider below with Tab, then use the arrow keys. The full demo's <a href="./#a11y">accessibility inspector</a> shows the generated attributes, the inert count, the live region text and the current reduced-motion preference in real time.</p>
+
+        <div class="panel demo-stage">
+          <div class="zs-slider zs-no-js play-slider" id="a11y-guide-demo" aria-label="Accessible carousel example">
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-2.svg" alt="Layered rose artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>Slide one</h4><p>labelled "1 of 4"</p></div>
+              </div>
+            </div>
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-3.svg" alt="Layered violet artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>Slide two</h4><p>off-screen slides are inert</p></div>
+              </div>
+            </div>
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-7.svg" alt="Layered lime artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>Slide three</h4><p>changes announce politely</p></div>
+              </div>
+            </div>
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-8.svg" alt="Layered ember artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>Slide four</h4><p>Home and End jump to the edges</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Testing checklist</h2>
+        <ul>
+          <li>Tab through the page: focus should reach the carousel once, not every off-screen slide.</li>
+          <li>With the carousel focused, try every arrow key plus Home and End.</li>
+          <li>In VoiceOver or NVDA, confirm the landmark name, the "n of m" labels and the polite announcement after a change.</li>
+          <li>Zoom to 200%: controls stay visible and nothing clips.</li>
+          <li>Enable "reduce motion" at the OS level and confirm slides fade instead of sliding.</li>
+          <li>Call <code>destroy()</code> and confirm the original markup, ARIA and tabindex are gone.</li>
+        </ul>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        <div class="faq">
+          <details>
+            <summary>Do I need to add ARIA attributes to a carousel myself?</summary>
+            <p>Not with Zikra Slider Pro. On init it sets <code>role=region</code> and <code>aria-roledescription=carousel</code> on the host, and <code>role=group</code>, <code>aria-roledescription=slide</code> and an "n of m" <code>aria-label</code> on every real slide. Add an <code>aria-label</code> to the host to name the carousel; everything else has a working default.</p>
+          </details>
+          <details>
+            <summary>Why does an accessible carousel use both <code>aria-hidden</code> and <code>inert</code>?</summary>
+            <p><code>aria-hidden</code> removes an element from the accessibility tree, while <code>inert</code> also blocks focus and pointer events. Used together on off-screen and cloned slides, keyboard and screen-reader users cannot reach content that is not visible. The active slide stays interactive.</p>
+          </details>
+          <details>
+            <summary>How are slide changes announced to screen readers?</summary>
+            <p>A visually hidden polite live region receives "Slide n of m" after each change, debounced by 120 ms. Set <code>features.a11y.liveRegion</code> to <code>false</code> when you already provide your own status text.</p>
+          </details>
+          <details>
+            <summary>Does the carousel respect <code>prefers-reduced-motion</code>?</summary>
+            <p>Yes. When the user prefers reduced motion, the engine swaps the layout transition for a fade; <code>fallback.reducedMotion</code> defaults to <code>'fade'</code>. The demo's accessibility inspector shows the current media-query result.</p>
+          </details>
+        </div>
+
+        <div class="guide-cta">
+          <a class="btn" href="./zero-dependency-carousel.html">Next: the zero-dependency story</a>
+          <a class="btn ghost" href="./swiper-alternatives.html">Compare libraries</a>
+          <a class="btn ghost" href="./">Open the full demo</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>Zikra Slider Pro · MIT · v1.3.3</span>
+      <nav class="footer-links" aria-label="Project links">
+        <a href="./swiper-alternatives.html">Swiper alternatives</a>
+        <a href="./accessible-carousel.html">Accessibility</a>
+        <a href="./zero-dependency-carousel.html">Zero dependencies</a>
+        <a href="https://github.com/akhtar1985/zikra-slider-pro">GitHub</a>
+        <a href="https://www.npmjs.com/package/zikra-slider-pro">npm</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../dist/zikraslider.umd.js"></script>
+  <script>
+    zikraslider('#a11y-guide-demo', { type: 'slide' });
+  </script>
+</body>
+</html>

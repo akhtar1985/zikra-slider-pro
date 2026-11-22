@@ -58,7 +58,14 @@
     "typescript",
     "gsap",
     "anime",
-    "motion"
+    "motion",
+    "carousel-library",
+    "slider-library",
+    "accessible-carousel",
+    "image-carousel",
+    "testimonial-slider",
+    "swiper-alternative",
+    "touch-slider"
   ],
   "author": "Zikra",
   "license": "MIT",

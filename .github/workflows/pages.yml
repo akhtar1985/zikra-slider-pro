@@ -30,6 +30,7 @@ jobs:
           mkdir -p _site/examples _site/dist
           cp -r examples/. _site/examples/
           cp -r dist/. _site/dist/
+          cp examples/sitemap.xml _site/sitemap.xml
           cat > _site/index.html <<'HTML'
           <!doctype html>
           <html lang="en">

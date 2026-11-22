@@ -5,6 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zikra Slider Pro — zero-dependency slider &amp; carousel</title>
   <meta name="description" content="Zikra Slider Pro: a production-grade, accessible, zero-dependency slider and carousel for Vanilla JS, React, Next.js and Vue 3.">
+  <link rel="canonical" href="https://akhtar1985.github.io/zikra-slider-pro/examples/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zikra Slider Pro">
+  <meta property="og:title" content="Zikra Slider Pro — zero-dependency slider &amp; carousel">
+  <meta property="og:description" content="Accessible, zero-dependency carousel with 7 layouts, parallax, runtime slide APIs and a GSAP/anime.js/Motion → WAAPI → CSS animation ladder.">
+  <meta property="og:url" content="https://akhtar1985.github.io/zikra-slider-pro/examples/">
+  <meta property="og:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <meta property="og:image:width" content="1400">
+  <meta property="og:image:height" content="1000">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zikra Slider Pro — zero-dependency slider &amp; carousel">
+  <meta name="twitter:description" content="Accessible, zero-dependency carousel with 7 layouts, parallax, runtime slide APIs and a swappable animation engine.">
+  <meta name="twitter:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Zikra Slider Pro",
+    "description": "Accessible, zero-dependency slider and carousel engine with 7 layouts, parallax, runtime slide APIs, a swappable animation backend and a full destroy() restore.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "softwareVersion": "1.3.3",
+    "url": "https://akhtar1985.github.io/zikra-slider-pro/examples/",
+    "downloadUrl": "https://www.npmjs.com/package/zikra-slider-pro",
+    "codeRepository": "https://github.com/akhtar1985/zikra-slider-pro",
+    "license": "https://opensource.org/licenses/MIT",
+    "image": "https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does Zikra Slider Pro require GSAP, anime.js or Motion?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. GSAP, anime.js and Motion are optional. With animation.library set to 'auto', the engine uses whichever library is already loaded, then falls back to the Web Animations API and finally to CSS transitions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Zikra Slider Pro a drop-in replacement for Swiper?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The APIs are different, so a Swiper configuration has to be mapped option by option and re-tested. Simple sliders move quickly, but it is not a find-and-replace."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I add or remove slides after init?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. appendSlide(), prependSlide() and removeSlide() accept HTML strings, elements or arrays, and the engine renumbers data-zs-index, ids and the 'n of m' slide labels automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does destroy() really restore my markup?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. destroy() removes generated nodes and restores the original classes, ids, ARIA attributes, inline styles and the engine's data-zs-media markers, so the host matches its pre-init markup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work with React and Next.js?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. A React component ships as zikra-slider-pro/react, and the examples folder includes a Next.js App Router client component that destroys the instance on unmount."
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-family='sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='%23070912'%3Ez%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="../dist/zikra-slider.css">
   <link rel="stylesheet" href="./demo.css">
@@ -27,6 +109,7 @@
         <a href="#a11y">A11y</a>
         <a href="#lifecycle">Lifecycle</a>
         <a href="#playground">API</a>
+        <a href="#guides">Guides</a>
         <a href="#quickstart">Quick start</a>
       </nav>
       <span class="chip"><span class="dot"></span>v1.3.3 · vanillajs</span>
@@ -563,12 +646,69 @@ onBeforeUnmount(() =&gt; instance?.destroy());</code></pre>
         </div>
       </div>
     </section>
+
+    <section class="section" id="guides" aria-labelledby="guides-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">10 — Guides</span>
+            <h2 id="guides-title">Go deeper than the demo.</h2>
+            <p>Long-form guides for the decisions around the engine: picking an alternative, getting accessibility right, and keeping the bundle small.</p>
+          </div>
+        </div>
+
+        <div class="guide-grid">
+          <a class="panel guide-card" href="./swiper-alternatives.html">
+            <b>Swiper alternatives for vanilla JS</b>
+            <span>Size, accessibility, animation and lifecycle compared across six libraries — with a live vanilla replacement.</span>
+          </a>
+          <a class="panel guide-card" href="./accessible-carousel.html">
+            <b>Accessible carousel patterns</b>
+            <span>ARIA roles, per-slide labels, inert off-screen slides, live-region announcements, keyboard and reduced motion.</span>
+          </a>
+          <a class="panel guide-card" href="./zero-dependency-carousel.html">
+            <b>A zero-dependency carousel</b>
+            <span>What 16.6 kB gzipped buys you, what it does not, and how the optional animation ladder works.</span>
+          </a>
+        </div>
+
+        <div class="faq faq-panel panel">
+          <h3>Frequently asked questions</h3>
+          <details>
+            <summary>Does Zikra Slider Pro require GSAP, anime.js or Motion?</summary>
+            <p>No. GSAP, anime.js and Motion are optional. With <code>animation.library</code> set to <code>'auto'</code>, the engine uses whichever library is already loaded, then falls back to the Web Animations API and finally to CSS transitions.</p>
+          </details>
+          <details>
+            <summary>Is Zikra Slider Pro a drop-in replacement for Swiper?</summary>
+            <p>No. The APIs are different, so a Swiper configuration has to be mapped option by option and re-tested. Simple sliders move quickly, but it is not a find-and-replace.</p>
+          </details>
+          <details>
+            <summary>Can I add or remove slides after init?</summary>
+            <p>Yes. <code>appendSlide()</code>, <code>prependSlide()</code> and <code>removeSlide()</code> accept HTML strings, elements or arrays, and the engine renumbers <code>data-zs-index</code>, ids and the 'n of m' slide labels automatically.</p>
+          </details>
+          <details>
+            <summary>Does <code>destroy()</code> really restore my markup?</summary>
+            <p>Yes. <code>destroy()</code> removes generated nodes and restores the original classes, ids, ARIA attributes, inline styles and the engine's <code>data-zs-media</code> markers, so the host matches its pre-init markup.</p>
+          </details>
+          <details>
+            <summary>Does it work with React and Next.js?</summary>
+            <p>Yes. A React component ships as <code>zikra-slider-pro/react</code>, and the examples folder includes a Next.js App Router client component that destroys the instance on unmount.</p>
+          </details>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
       <span>Zikra Slider Pro · MIT · v1.3.3</span>
-      <span>Zero dependencies. One file. Ten years.</span>
+      <nav class="footer-links" aria-label="Project links">
+        <a href="./swiper-alternatives.html">Swiper alternatives</a>
+        <a href="./accessible-carousel.html">Accessibility</a>
+        <a href="./zero-dependency-carousel.html">Zero dependencies</a>
+        <a href="https://github.com/akhtar1985/zikra-slider-pro">GitHub</a>
+        <a href="https://www.npmjs.com/package/zikra-slider-pro">npm</a>
+      </nav>
     </div>
   </footer>
 

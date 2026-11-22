@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A zero-dependency carousel in 16.6 kB — Zikra Slider Pro</title>
+  <meta name="description" content="What a zero-dependency carousel costs and buys you: 16.6 kB gzipped JS, 1.9 kB CSS, no runtime dependencies and an optional animation ladder.">
+  <link rel="canonical" href="https://akhtar1985.github.io/zikra-slider-pro/examples/zero-dependency-carousel.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-family='sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='%23070912'%3Ez%3C/text%3E%3C/svg%3E">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Zikra Slider Pro">
+  <meta property="og:title" content="A zero-dependency carousel in 16.6 kB gzipped">
+  <meta property="og:description" content="What the bytes buy you, what they do not, and how the GSAP/anime.js/Motion → WAAPI → CSS animation ladder works.">
+  <meta property="og:url" content="https://akhtar1985.github.io/zikra-slider-pro/examples/zero-dependency-carousel.html">
+  <meta property="og:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A zero-dependency carousel in 16.6 kB gzipped">
+  <meta name="twitter:description" content="No runtime dependencies, one JS file, one stylesheet, optional animation engines — with a live demo.">
+  <meta name="twitter:image" content="https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png">
+  <link rel="stylesheet" href="../dist/zikra-slider.css">
+  <link rel="stylesheet" href="./demo.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "A zero-dependency carousel in 16.6 kB gzipped",
+    "description": "What a zero-dependency carousel costs and buys you, including the optional GSAP/anime.js/Motion to WAAPI to CSS animation ladder.",
+    "datePublished": "2026-11-22",
+    "dateModified": "2026-11-22",
+    "author": { "@type": "Person", "name": "Zikra" },
+    "publisher": { "@type": "Organization", "name": "Zikra Slider Pro" },
+    "mainEntityOfPage": "https://akhtar1985.github.io/zikra-slider-pro/examples/zero-dependency-carousel.html",
+    "image": "https://akhtar1985.github.io/zikra-slider-pro/examples/assets/og.png"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does the carousel require GSAP, anime.js or Motion One?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The animation ladder uses GSAP, anime.js or Motion One only when one is already present, then falls back to the Web Animations API and finally to CSS transitions. Those libraries are never bundled or downloaded by the package."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is React a dependency of the carousel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only for the wrapper. React is an optional peer dependency used by zikra-slider-pro/react. The core engine is plain JavaScript and never imports React."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the 16.6 kB figure measured?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is the gzipped size of dist/zikraslider.min.js, which is 60.2 kB minified and includes all seven layouts and built-in controls. The required stylesheet adds 1.9 kB gzipped. Measured for version 1.3.3."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use it without a build step?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Load dist/zikraslider.min.js and dist/zikra-slider.css from a CDN, then call the global zikraslider function. This demo site does exactly that; no bundler is involved."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./">
+        <span class="brand-mark" aria-hidden="true">z</span>
+        <span>Zikra Slider Pro<small>zero dependencies</small></span>
+      </a>
+      <nav class="nav" aria-label="Guide pages">
+        <a href="./">Demo</a>
+        <a href="./swiper-alternatives.html">Alternatives</a>
+        <a href="./accessible-carousel.html">Accessibility</a>
+        <a href="./zero-dependency-carousel.html" aria-current="page">Zero deps</a>
+      </nav>
+      <span class="chip"><span class="dot"></span>v1.3.3 · guide</span>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <article class="doc">
+        <span class="eyebrow">Guide · Zero dependencies</span>
+        <h1>A zero-dependency carousel in 16.6 kB gzipped</h1>
+        <p class="lede">"Zero dependencies" is a promise about what your package manager installs and what your users download. Here is exactly what Zikra Slider Pro costs, what those bytes buy, and where the trade-offs are.</p>
+        <p class="meta"><span>Updated 2026-11-22</span><span>7 min read</span><span><a href="./#hero">Live demo</a></span></p>
+
+        <h2>What zero dependencies means here</h2>
+        <ul>
+          <li><b>No runtime dependencies.</b> <code>package.json</code> has no <code>dependencies</code> field; nothing is installed alongside the engine.</li>
+          <li><b>One script and one stylesheet.</b> The UMD build exposes <code>window.zikraslider</code>; the ESM build exports the same factory.</li>
+          <li><b>Optional libraries stay optional.</b> GSAP, anime.js and Motion One are detected at runtime, never bundled and never fetched by the package.</li>
+          <li><b>React is an optional peer</b>, used only by the wrapper at <code>zikra-slider-pro/react</code>.</li>
+        </ul>
+
+        <h2>The bill of materials</h2>
+        <table>
+          <thead>
+            <tr><th>File</th><th>Minified</th><th>Gzipped</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>dist/zikraslider.min.js</code></td><td>60.2 kB</td><td>16.6 kB</td></tr>
+            <tr><td><code>dist/zikra-slider.css</code></td><td>6.1 kB</td><td>1.9 kB</td></tr>
+            <tr><td>Total required</td><td>66.3 kB</td><td>18.5 kB</td></tr>
+            <tr><td>Runtime dependencies</td><td colspan="2">0</td></tr>
+          </tbody>
+        </table>
+        <p>Measured for 1.3.3 with the project's esbuild pipeline and gzip. The JavaScript number includes every layout and the built-in arrows, bullets and progress bar — there are no optional modules to add later.</p>
+
+        <h2>What the bytes buy</h2>
+        <div class="benefits">
+          <div><b>7 layouts</b><span>slide, fade, scale, coverflow, stack, cards and a custom transform.</span></div>
+          <div><b>Accessibility defaults</b><span>roles, labels, live region, inert off-screen slides, keyboard, reduced motion.</span></div>
+          <div><b>Runtime APIs</b><span>appendSlide, prependSlide, removeSlide, update, sync and destroy.</span></div>
+        </div>
+        <p>Also included: parallax captions, thumbnail sync, free-mode drag with momentum, wheel navigation, autoplay, responsive breakpoints, RTL, lazy-image handling, TypeScript declarations and a React component. The engine is small because it has one compute pass and one transition plan — not because features are missing behind a paywall of extra imports.</p>
+
+        <h2>What you give up</h2>
+        <ul>
+          <li><b>Tree-shaking.</b> One ESM file means unused layouts still ship. If you want a 5 kB primitive and will build your own controls, Embla or Keen Slider is a better fit.</li>
+          <li><b>Virtual slides.</b> Every slide is in the DOM, which is fine for dozens, not for thousands.</li>
+          <li><b>Framework wrappers beyond React.</b> Vue and Next.js examples are provided, but only React ships as an official wrapper.</li>
+          <li><b>A large ecosystem.</b> It is a new, single-maintainer project; the big libraries have years of Stack Overflow answers.</li>
+        </ul>
+
+        <h2>Three ways to load it</h2>
+        <pre class="code-block"><code><span class="c"># npm</span>
+npm install zikra-slider-pro
+
+<span class="c">// ESM</span>
+<span class="k">import</span> zikraslider <span class="k">from</span> <span class="s">'zikra-slider-pro'</span>;
+<span class="k">import</span> <span class="s">'zikra-slider-pro/css'</span>;
+
+<span class="c">&lt;!-- script tag (UMD) --&gt;</span>
+&lt;link rel=<span class="s">"stylesheet"</span> href=<span class="s">"https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.3/dist/zikra-slider.css"</span>&gt;
+&lt;script src=<span class="s">"https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.3/dist/zikraslider.min.js"</span>&gt;&lt;/script&gt;</code></pre>
+
+        <h2>The animation ladder</h2>
+        <p>With <code>animation.library: 'auto'</code> (the default), the engine looks for GSAP, then anime.js, then Motion One. If none is present it uses <code>Element.animate</code> (WAAPI), and if that is unavailable it uses CSS transitions. The same from/to plan drives every backend, so falling back is a strategy swap rather than a rewrite. Read the exact options in the <a href="./#engines">Engines section</a> of the demo.</p>
+
+        <h2>Try the single-file build</h2>
+        <p>This slider is initialized by the UMD build already loaded by this page:</p>
+
+        <div class="panel demo-stage">
+          <div class="zs-slider zs-no-js play-slider" id="zd-demo" aria-label="Zero dependency demo slider">
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-5.svg" alt="Layered teal artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>18.5 kB gzipped</h4><p>engine plus stylesheet</p></div>
+              </div>
+            </div>
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-6.svg" alt="Layered amber artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>No npm install</h4><p>one script tag, one stylesheet</p></div>
+              </div>
+            </div>
+            <div class="zs-slide">
+              <div class="play-card">
+                <img src="./assets/art-1.svg" alt="Layered indigo artwork" width="1280" height="720" loading="lazy">
+                <div class="play-copy"><h4>No fetch at runtime</h4><p>optional engines are never downloaded</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <pre class="code-block"><code>zikraslider(<span class="s">'#zd-demo'</span>, {
+  type: <span class="s">'slide'</span>,
+  loop: <span class="n">true</span>,
+  speed: <span class="n">460</span>
+});</code></pre>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        <div class="faq">
+          <details>
+            <summary>Does the carousel require GSAP, anime.js or Motion One?</summary>
+            <p>No. The animation ladder uses GSAP, anime.js or Motion One only when one is already present, then falls back to the Web Animations API and finally to CSS transitions. Those libraries are never bundled or downloaded by the package.</p>
+          </details>
+          <details>
+            <summary>Is React a dependency of the carousel?</summary>
+            <p>Only for the wrapper. React is an optional peer dependency used by <code>zikra-slider-pro/react</code>. The core engine is plain JavaScript and never imports React.</p>
+          </details>
+          <details>
+            <summary>How is the 16.6 kB figure measured?</summary>
+            <p>It is the gzipped size of <code>dist/zikraslider.min.js</code>, which is 60.2 kB minified and includes all seven layouts and built-in controls. The required stylesheet adds 1.9 kB gzipped. Measured for version 1.3.3.</p>
+          </details>
+          <details>
+            <summary>Can I use it without a build step?</summary>
+            <p>Yes. Load <code>dist/zikraslider.min.js</code> and <code>dist/zikra-slider.css</code> from a CDN, then call the global <code>zikraslider</code> function. This demo site does exactly that; no bundler is involved.</p>
+          </details>
+        </div>
+
+        <div class="guide-cta">
+          <a class="btn" href="./swiper-alternatives.html">Compare with Swiper and friends</a>
+          <a class="btn ghost" href="./accessible-carousel.html">Accessibility guide</a>
+          <a class="btn ghost" href="./">Open the full demo</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>Zikra Slider Pro · MIT · v1.3.3</span>
+      <nav class="footer-links" aria-label="Project links">
+        <a href="./swiper-alternatives.html">Swiper alternatives</a>
+        <a href="./accessible-carousel.html">Accessibility</a>
+        <a href="./zero-dependency-carousel.html">Zero dependencies</a>
+        <a href="https://github.com/akhtar1985/zikra-slider-pro">GitHub</a>
+        <a href="https://www.npmjs.com/package/zikra-slider-pro">npm</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../dist/zikraslider.umd.js"></script>
+  <script>
+    zikraslider('#zd-demo', { type: 'slide', loop: true, speed: 460 });
+  </script>
+</body>
+</html>

@@ -35,6 +35,7 @@ Jump straight to a section:
 - [Accessibility](https://akhtar1985.github.io/zikra-slider-pro/examples/#a11y) — ARIA roles, live region, inert off-screen slides, keyboard, reduced motion
 - [Lifecycle](https://akhtar1985.github.io/zikra-slider-pro/examples/#lifecycle) — inspect the DOM/ARIA before and after `destroy()`, then rebuild
 - [Playground](https://akhtar1985.github.io/zikra-slider-pro/examples/#playground) — drag, wheel, breakpoints, live state, `destroy()` → rebuild
+- Guides: [Swiper alternatives](https://akhtar1985.github.io/zikra-slider-pro/examples/swiper-alternatives.html) · [accessible carousel patterns](https://akhtar1985.github.io/zikra-slider-pro/examples/accessible-carousel.html) · [zero-dependency sizing](https://akhtar1985.github.io/zikra-slider-pro/examples/zero-dependency-carousel.html)
 
 ## Why Zikra Slider Pro?
 
@@ -909,7 +910,7 @@ The suite covers init/a11y, navigation and cancellation, loop wrap, layout trans
 
 `.github/workflows/ci.yml` runs the full pipeline on every push and pull request — Node 22 and 24 on Linux, plus Node 24 on Windows: `npm ci`, lint, the test suite, the declaration typecheck, and a package-contents check. `.github/workflows/pages.yml` builds the demo and deploys it to GitHub Pages from `main`.
 
-The demo exercises the deliverable set in one page:
+The demo site exercises the deliverable set:
 
 1. **Hero** — loop, autoplay, keyboard (when focused), external custom arrows, custom numbered bullets, a synced thumbnail strip (`sync.asThumbnails`, index mode) and a parallax caption layer.
 2. **Gallery** — lazy images, fraction bullets with a custom formatter, progress-synced filmstrip, clickable thumbnails and parallax artwork.
@@ -920,8 +921,9 @@ The demo exercises the deliverable set in one page:
 7. **Lifecycle** — a before/after report of the host's generated nodes, ARIA attributes, tabindex and normalized markup across `destroy()` and re-init, proving the restore is byte-identical.
 8. **Playground** — free-mode drag, wheel, responsive breakpoints, live `getState()`, cancellable `beforeChange`, RTL update, and a real `destroy()` → rebuild cycle with the event log.
 9. **Quick start** — copy-paste markup and the exact options used by the page.
+10. **Guides and FAQ** — three long-form pages ([Swiper alternatives](https://akhtar1985.github.io/zikra-slider-pro/examples/swiper-alternatives.html), [accessible carousel patterns](https://akhtar1985.github.io/zikra-slider-pro/examples/accessible-carousel.html), [zero-dependency sizing](https://akhtar1985.github.io/zikra-slider-pro/examples/zero-dependency-carousel.html)) plus an on-page FAQ with `FAQPage` structured data.
 
-The page loads only `dist/zikra-slider.css` and `dist/zikraslider.umd.js`; demo code never imports internals. Artwork is generated SVG, so everything except the optional engine scripts works offline.
+The site ships `sitemap.xml` (copied to the Pages root by the workflow), canonical URLs, Open Graph/Twitter cards and `SoftwareApplication`/`FAQPage` JSON-LD. The page loads only `dist/zikra-slider.css` and `dist/zikraslider.umd.js`; demo code never imports internals. Artwork is generated SVG, so everything except the optional engine scripts works offline.
 
 ## License
 
