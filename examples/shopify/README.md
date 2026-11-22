@@ -8,14 +8,14 @@ merchant-editable slider section:
 | [`zikra-slider-bootstrap.liquid`](zikra-slider-bootstrap.liquid) | `snippets/` | Loads the pinned CDN files once and initializes every slider, re-initializing in the theme editor |
 | [`zikra-slider.liquid`](zikra-slider.liquid) | `sections/` | The slider section itself: slides as blocks, settings for layout, controls and autoplay |
 
-Both are pinned to `zikra-slider-pro@1.3.2`. When you upgrade, change the
+Both are pinned to `zikra-slider-pro@1.3.3`. When you upgrade, change the
 three URLs in the bootstrap snippet together.
 
 Direct CDN links (open, copy, paste into the theme editor):
 
-- Section: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.2/examples/shopify/zikra-slider.liquid
-- Bootstrap snippet: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.2/examples/shopify/zikra-slider-bootstrap.liquid
-- This guide: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.2/examples/shopify/README.md
+- Section: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.3/examples/shopify/zikra-slider.liquid
+- Bootstrap snippet: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.3/examples/shopify/zikra-slider-bootstrap.liquid
+- This guide: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.3/examples/shopify/README.md
 
 ## Install (theme editor)
 
