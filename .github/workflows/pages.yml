@@ -31,6 +31,7 @@ jobs:
           cp -r examples/. _site/examples/
           cp -r dist/. _site/dist/
           cp examples/sitemap.xml _site/sitemap.xml
+          cp examples/robots.txt _site/robots.txt
           cat > _site/index.html <<'HTML'
           <!doctype html>
           <html lang="en">

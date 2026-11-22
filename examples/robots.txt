@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akhtar1985.github.io/zikra-slider-pro/sitemap.xml
