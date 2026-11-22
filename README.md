@@ -129,7 +129,7 @@ Save this as `index.html`, open it, and you have a working slider — CDN files,
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zikra Slider Pro test</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikra-slider.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikra-slider.css">
 </head>
 <body>
 
@@ -140,7 +140,7 @@ Save this as `index.html`, open it, and you have a working slider — CDN files,
     <div class="zs-slide"><img src="https://picsum.photos/id/1018/1600/1000" alt="Misty mountain lake" width="1600" height="1000" loading="lazy"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.min.js"></script>
   <script>
     const slider = zikraslider('#hero', {
       loop: true,
@@ -159,29 +159,32 @@ Arrows and bullet pagination are on by default; autoplay is enabled above via `f
 No build step — load the stylesheet and the UMD bundle:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikra-slider.css">
-<script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikra-slider.css">
+<script src="https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.min.js"></script>
 <script>
   zikraslider('#hero', { loop: true, bullets: { enabled: true } });
 </script>
 ```
 
-Direct links to every published file (script, CSS, ESM, types, React):
+Direct links to every published file (script, CSS, ESM, types, React, Shopify):
 
 | File | Use it for | Link |
 | --- | --- | --- |
-| `zikraslider.min.js` | UMD script tag (what the snippet above loads) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.min.js |
-| `zikra-slider.css` | required stylesheet | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikra-slider.css |
-| `zikraslider.esm.min.js` | ESM `<script type="module">` | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.esm.min.js |
-| `zikraslider.esm.js` | unminified ESM (debugging) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.esm.js |
-| `zikraslider.cjs` | CommonJS | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.cjs |
-| `zikraslider.d.ts` | TypeScript types | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/dist/zikraslider.d.ts |
-| `ZikraSlider.js` | React component (JSX-free) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/react/ZikraSlider.js |
+| `zikraslider.min.js` | UMD script tag (what the snippet above loads) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.min.js |
+| `zikra-slider.css` | required stylesheet | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikra-slider.css |
+| `zikraslider.esm.min.js` | ESM `<script type="module">` | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.esm.min.js |
+| `zikraslider.esm.js` | unminified ESM (debugging) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.esm.js |
+| `zikraslider.cjs` | CommonJS | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.cjs |
+| `zikraslider.d.ts` | TypeScript types | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/dist/zikraslider.d.ts |
+| `ZikraSlider.js` | React component (JSX-free) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/react/ZikraSlider.js |
+| `zikra-slider.liquid` | Shopify section (Online Store 2.0) | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider.liquid |
+| `zikra-slider-bootstrap.liquid` | Shopify bootstrap snippet | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider-bootstrap.liquid |
+| `shopify/README.md` | Shopify install guide | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/README.md |
 
-Browse the whole package at https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.0/ (or https://www.jsdelivr.com/package/npm/zikra-slider-pro).
+Browse the whole package at https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/ (or https://www.jsdelivr.com/package/npm/zikra-slider-pro).
 
-- unpkg works the same way: `https://unpkg.com/zikra-slider-pro@1.3.0/dist/…`.
-- Pin a version (`@1.3.0`) or a major range (`@1`); avoid `latest` in production.
+- unpkg works the same way: `https://unpkg.com/zikra-slider-pro@1.3.1/dist/…`.
+- Pin a version (`@1.3.1`) or a major range (`@1`); avoid `latest` in production.
 - A brand-new package name shows a `0.0.0-stage` placeholder and holds back the tarball for a few minutes while npm runs its malware scan; the release becomes installable automatically once the scan finishes.
 
 ### ES modules
@@ -580,7 +583,7 @@ Static helpers:
 zikraslider.get('#hero');       // existing instance or undefined
 zikraslider.instances();        // array of live instances
 zikraslider.defaults;           // default options object
-zikraslider.VERSION;            // '1.3.0'
+zikraslider.VERSION;            // '1.3.1'
 ```
 
 Creating an instance on a missing element or without a DOM returns a safe stub whose methods are no-ops, so code paths do not crash during SSR.
@@ -752,7 +755,7 @@ A drop-in section for Online Store 2.0 themes (Dawn and newer) lives in [example
 {% render 'zikra-slider-bootstrap' %}
 ```
 
-Then add **Zikra Slider** from the theme editor. The bootstrap initializes every `[data-zikra-slider]` element, re-initializes it on `shopify:section:load` and calls `destroy()` on `shopify:section:unload`, so editor changes never stack instances. Full install steps: [examples/shopify/README.md](https://github.com/akhtar1985/zikra-slider-pro/blob/main/examples/shopify/README.md).
+Then add **Zikra Slider** from the theme editor. The bootstrap initializes every `[data-zikra-slider]` element, re-initializes it on `shopify:section:load` and calls `destroy()` on `shopify:section:unload`, so editor changes never stack instances. Both Liquid files ship in the npm package (`node_modules/zikra-slider-pro/examples/shopify/`) and are served raw from jsDelivr (links in the [CDN table](#cdn)); full install steps: [examples/shopify/README.md](https://github.com/akhtar1985/zikra-slider-pro/blob/main/examples/shopify/README.md).
 
 ## CSS classes and variables
 

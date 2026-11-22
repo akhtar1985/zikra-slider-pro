@@ -8,7 +8,7 @@ merchant-editable slider section:
 | [`zikra-slider-bootstrap.liquid`](zikra-slider-bootstrap.liquid) | `snippets/` | Loads the pinned CDN files once and initializes every slider, re-initializing in the theme editor |
 | [`zikra-slider.liquid`](zikra-slider.liquid) | `sections/` | The slider section itself: slides as blocks, settings for layout, controls and autoplay |
 
-Both are pinned to `zikra-slider-pro@1.3.0`. When you upgrade, change the
+Both are pinned to `zikra-slider-pro@1.3.1`. When you upgrade, change the
 three URLs in the bootstrap snippet together.
 
 ## Install (theme editor)
