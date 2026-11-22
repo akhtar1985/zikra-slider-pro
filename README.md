@@ -755,7 +755,17 @@ A drop-in section for Online Store 2.0 themes (Dawn and newer) lives in [example
 {% render 'zikra-slider-bootstrap' %}
 ```
 
-Then add **Zikra Slider** from the theme editor. The bootstrap initializes every `[data-zikra-slider]` element, re-initializes it on `shopify:section:load` and calls `destroy()` on `shopify:section:unload`, so editor changes never stack instances. Both Liquid files ship in the npm package (`node_modules/zikra-slider-pro/examples/shopify/`) and are served raw from jsDelivr (links in the [CDN table](#cdn)); full install steps: [examples/shopify/README.md](https://github.com/akhtar1985/zikra-slider-pro/blob/main/examples/shopify/README.md).
+Then add **Zikra Slider** from the theme editor. The bootstrap initializes every `[data-zikra-slider]` element, re-initializes it on `shopify:section:load` and calls `destroy()` on `shopify:section:unload`, so editor changes never stack instances.
+
+Direct CDN links for the recipe files (open, copy, paste into the theme editor):
+
+| File | Where it goes | CDN link |
+| --- | --- | --- |
+| `zikra-slider.liquid` | `sections/` | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider.liquid |
+| `zikra-slider-bootstrap.liquid` | `snippets/` | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider-bootstrap.liquid |
+| `README.md` | install guide | https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/README.md |
+
+They also ship in the npm package at `node_modules/zikra-slider-pro/examples/shopify/`. Full install steps: [examples/shopify/README.md](https://github.com/akhtar1985/zikra-slider-pro/blob/main/examples/shopify/README.md).
 
 ## CSS classes and variables
 

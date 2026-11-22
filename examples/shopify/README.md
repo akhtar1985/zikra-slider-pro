@@ -11,6 +11,12 @@ merchant-editable slider section:
 Both are pinned to `zikra-slider-pro@1.3.1`. When you upgrade, change the
 three URLs in the bootstrap snippet together.
 
+Direct CDN links (open, copy, paste into the theme editor):
+
+- Section: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider.liquid
+- Bootstrap snippet: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/zikra-slider-bootstrap.liquid
+- This guide: https://cdn.jsdelivr.net/npm/zikra-slider-pro@1.3.1/examples/shopify/README.md
+
 ## Install (theme editor)
 
 1. **Online Store → Themes → your theme → ⋯ → Edit code.**
