@@ -332,6 +332,7 @@
 
     engineSlider.update({ animation: engineOptions(name) });
     engineSlider.next({ reason: 'engine' });
+    syncEngineStatus();
   }
 
   engineButtons.forEach((button) => {
@@ -344,6 +345,7 @@
     button.addEventListener('click', () => {
       if (button.getAttribute('data-engine-nav') === 'prev') engineSlider.prev({ reason: 'engine' });
       else engineSlider.next({ reason: 'engine' });
+      syncEngineStatus();
     });
   });
 
