@@ -269,38 +269,56 @@ function adaptAnime(anime) {
     fromTo(el, from, to, opts) {
       return new Promise((resolve) => {
         if (!isElement(el)) return resolve();
-        const vars = {
-          targets: el,
-          duration: opts.duration,
-          delay: opts.delay || 0,
-          easing: libraryEase(opts.easing, 'easeOutQuad'),
-          complete: resolve
-        };
-        const toVars = {
-          translateX: to.x || 0,
-          translateY: to.y || 0,
-          translateZ: to.z || 0,
-          scale: to.scale == null ? 1 : to.scale,
-          rotate: `${to.rotate || 0}deg`,
-          rotateY: `${to.rotateY || 0}deg`,
-          opacity: to.opacity == null ? 1 : to.opacity
-        };
-        const fromVars = {
-          translateX: from.x || 0,
-          translateY: from.y || 0,
-          translateZ: from.z || 0,
-          scale: from.scale == null ? 1 : from.scale,
-          rotate: `${from.rotate || 0}deg`,
-          rotateY: `${from.rotateY || 0}deg`,
-          opacity: from.opacity == null ? 1 : from.opacity
-        };
         try {
           if (modern) {
-            const ease = libraryEase(opts.easing, null);
-            const modernOpts = { duration: opts.duration, delay: opts.delay || 0 };
-            if (ease) modernOpts.ease = ease;
-            anime.animate(el, { ...fromVars, ...toVars }, modernOpts).finished.then(resolve, resolve);
-          } else anime({ ...vars, ...fromVars, keyframes: [{ ...fromVars }, { ...toVars }] });
+            // v4 takes short transform keys and all options in one parameters object.
+            const params = {
+              x: to.x || 0,
+              y: to.y || 0,
+              z: to.z || 0,
+              scale: to.scale == null ? 1 : to.scale,
+              rotate: to.rotate || 0,
+              rotateY: to.rotateY || 0,
+              opacity: to.opacity == null ? 1 : to.opacity,
+              duration: opts.duration,
+              delay: opts.delay || 0
+            };
+            let ease = libraryEase(opts.easing, null);
+            // v4 renamed easings: easeOutQuad -> outQuad.
+            if (ease && /^ease[A-Z]/.test(ease)) ease = ease.charAt(4).toLowerCase() + ease.slice(5);
+            if (ease) params.ease = ease;
+            const animation = anime.animate(el, params);
+            const settled = animation && (animation.finished || animation);
+            if (settled && typeof settled.then === 'function') settled.then(resolve, resolve);
+            else resolve();
+            return;
+          }
+          const vars = {
+            targets: el,
+            duration: opts.duration,
+            delay: opts.delay || 0,
+            easing: libraryEase(opts.easing, 'easeOutQuad'),
+            complete: resolve
+          };
+          const toVars = {
+            translateX: to.x || 0,
+            translateY: to.y || 0,
+            translateZ: to.z || 0,
+            scale: to.scale == null ? 1 : to.scale,
+            rotate: `${to.rotate || 0}deg`,
+            rotateY: `${to.rotateY || 0}deg`,
+            opacity: to.opacity == null ? 1 : to.opacity
+          };
+          const fromVars = {
+            translateX: from.x || 0,
+            translateY: from.y || 0,
+            translateZ: from.z || 0,
+            scale: from.scale == null ? 1 : from.scale,
+            rotate: `${from.rotate || 0}deg`,
+            rotateY: `${from.rotateY || 0}deg`,
+            opacity: from.opacity == null ? 1 : from.opacity
+          };
+          anime({ ...vars, ...fromVars, keyframes: [{ ...fromVars }, { ...toVars }] });
         } catch (err) {
           resolve();
         }
@@ -360,11 +378,14 @@ function resolveAnimationLibrary(setting) {
       if (name === 'gsap' && global.gsap && typeof global.gsap.fromTo === 'function') {
         return { adapter: adaptGsap(global.gsap), label: 'gsap' };
       }
-      if (name === 'anime' && typeof global.anime === 'function') {
+      // v3 UMD exposes a function; the v4 UMD bundle exposes a namespace with animate().
+      if (name === 'anime' && (typeof global.anime === 'function' || (global.anime && typeof global.anime.animate === 'function'))) {
         return { adapter: adaptAnime(global.anime), label: 'anime' };
       }
-      if (name === 'motion' && global.motion && typeof global.motion.animate === 'function') {
-        return { adapter: adaptMotion(global.motion), label: 'motion' };
+      // Motion One's UMD bundle registers `Motion`; module bundles may use `motion`.
+      const motion = global.motion || global.Motion;
+      if (name === 'motion' && motion && typeof motion.animate === 'function') {
+        return { adapter: adaptMotion(motion), label: 'motion' };
       }
     } catch (err) {
       /* a broken global should never break the slider */

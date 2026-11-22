@@ -539,6 +539,40 @@ button.zs-arrow[disabled] { opacity: 0.35; }
 
 .effect-card .effect-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 11px; }
 
+/* -------------------------------------------------------------- engines */
+
+.engine-hint { margin-left: auto; color: var(--muted); font-size: 11.5px; }
+
+.control-bar [data-engine] { font-family: var(--mono); }
+
+.control-bar [data-engine][aria-pressed="true"] {
+  background: rgba(139, 140, 249, 0.22);
+  border-color: rgba(139, 140, 249, 0.65);
+  color: var(--text);
+  box-shadow: 0 0 22px -10px rgba(139, 140, 249, 0.9);
+}
+
+.engine-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+#engine-status { font: 600 12px/1 var(--mono); color: #a5b4fc; letter-spacing: 0.02em; }
+
+#engine-source { font-family: var(--mono); text-transform: none; letter-spacing: 0.02em; }
+
+.console .code-block { white-space: pre; font-size: 11.5px; }
+
+.engine-note { margin: 0; color: var(--muted); font-size: 12.5px; }
+
+.engine-note code { font-family: var(--mono); color: var(--accent); font-size: 11.5px; }
+
 /* ------------------------------------------------------------ playground */
 
 .playground {

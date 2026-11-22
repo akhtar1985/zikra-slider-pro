@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import zikraslider from '../src/zikraslider.js';
 
 const live = [];
@@ -179,6 +179,77 @@ describe('update and destroy', () => {
     expect(again.ready).toBe(true);
     expect(again.getState().total).toBe(5);
     expect(zikraslider.get(el)).toBe(again);
+  });
+});
+
+describe('animation backends', () => {
+  const finished = () => ({ finished: Promise.resolve() });
+  afterEach(() => {
+    delete window.gsap;
+    delete window.anime;
+    delete window.motion;
+    delete window.Motion;
+  });
+
+  it('detects the anime.js v4 UMD namespace', () => {
+    const animate = vi.fn(finished);
+    window.anime = { animate };
+    const { instance } = mount(5, {
+      speed: 600,
+      animation: { library: 'anime', effect: 'slide-up', duration: 40 }
+    });
+    instance.next();
+    expect(instance.getState().backend).toBe('anime');
+    expect(animate).toHaveBeenCalled();
+    // v4 receives one parameters object with the duration in ms, not a keyframes arg.
+    const [target, params] = animate.mock.calls[0];
+    expect(target.classList.contains('zs-slide')).toBe(true);
+    expect(params.duration).toBe(40);
+    expect(params).toHaveProperty('x');
+    expect(params).not.toHaveProperty('targets');
+  });
+
+  it('detects the anime.js v3 function global', () => {
+    const anime = vi.fn();
+    window.anime = anime;
+    const { instance } = mount(5, {
+      speed: 600,
+      animation: { library: 'anime', effect: 'fade', duration: 40 }
+    });
+    instance.next();
+    expect(instance.getState().backend).toBe('anime');
+    expect(anime).toHaveBeenCalled();
+  });
+
+  it('detects the Motion One UMD global (capital M)', () => {
+    const animate = vi.fn(finished);
+    window.Motion = { animate };
+    const { instance } = mount(5, {
+      speed: 600,
+      animation: { library: 'motion', effect: 'slide-up', duration: 40 }
+    });
+    instance.next();
+    expect(instance.getState().backend).toBe('motion');
+    expect(animate).toHaveBeenCalled();
+  });
+
+  it('auto picks Motion when no GSAP or anime is loaded', () => {
+    window.Motion = { animate: vi.fn(finished) };
+    const { instance } = mount(5, {
+      speed: 600,
+      animation: { library: 'auto', effect: 'zoom', duration: 40 }
+    });
+    instance.next();
+    expect(instance.getState().backend).toBe('motion');
+  });
+
+  it('falls back when the requested library is missing', () => {
+    const { instance } = mount(5, {
+      speed: 600,
+      animation: { library: 'anime', effect: 'fade', duration: 40, fallback: 'waapi' }
+    });
+    instance.next();
+    expect(['waapi', 'css']).toContain(instance.getState().backend);
   });
 });
 

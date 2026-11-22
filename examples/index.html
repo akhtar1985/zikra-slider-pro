@@ -22,6 +22,7 @@
       <nav class="nav" aria-label="Demo sections">
         <a href="#gallery">Sync</a>
         <a href="#effects">Effects</a>
+        <a href="#engines">Engines</a>
         <a href="#playground">API</a>
         <a href="#quickstart">Quick start</a>
       </nav>
@@ -277,12 +278,62 @@
       </div>
     </section>
 
+    <!-- ========================================================== ENGINES -->
+    <section class="section" id="engines" aria-labelledby="engines-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">04 — Animation engines</span>
+            <h2 id="engines-title">One option, four engines.</h2>
+            <p>Point <code>animation.library</code> at anime.js or Motion One and every transition is handed to that library. Switch to WAAPI or CSS to watch the fallback ladder — the slides and options stay the same; only the engine changes. Libraries load from jsDelivr on demand.</p>
+          </div>
+          <span class="badge">live backend</span>
+        </div>
+
+        <div class="playground">
+          <div class="panel stage">
+            <div id="engine-slider" class="zs-slider zs-no-js play-slider" aria-label="Animation engine demo slider">
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-1.svg" alt="Indigo art"><div class="play-copy"><h4>anime.js</h4><p>v4 namespace · v3 function</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-3.svg" alt="Rose art"><div class="play-copy"><h4>Motion One</h4><p>UMD Motion global</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-5.svg" alt="Violet art"><div class="play-copy"><h4>WAAPI</h4><p>Element.animate fallback</p></div></div></div>
+              <div class="zs-slide"><div class="play-card"><img src="./assets/art-7.svg" alt="Orchid art"><div class="play-copy"><h4>CSS</h4><p>Transitions, no library</p></div></div></div>
+            </div>
+
+            <div class="control-bar" role="group" aria-label="Choose an animation engine">
+              <button class="btn" data-engine="css" aria-pressed="true" type="button">CSS</button>
+              <button class="btn ghost" data-engine="waapi" aria-pressed="false" type="button">WAAPI</button>
+              <button class="btn ghost" data-engine="anime" aria-pressed="false" type="button">anime.js</button>
+              <button class="btn ghost" data-engine="motion" aria-pressed="false" type="button">Motion One</button>
+            </div>
+            <div class="control-bar" role="group" aria-label="Navigate the engine demo">
+              <button class="btn ghost" data-engine-nav="prev" type="button">← Prev</button>
+              <button class="btn ghost" data-engine-nav="next" type="button">Next →</button>
+              <span class="engine-hint">Scripts load from jsDelivr only when you pick them.</span>
+            </div>
+
+            <div class="engine-foot">
+              <span id="engine-status">backend: —</span>
+              <span class="badge" id="engine-source">script: none needed</span>
+            </div>
+          </div>
+
+          <aside class="panel console" aria-label="Code for the selected engine">
+            <div>
+              <h3>Your script</h3>
+              <pre class="code-block" id="engine-code"><code>Click an engine above to load its script and options.</code></pre>
+            </div>
+            <p class="engine-note" id="engine-note">The option object is the same for every engine; only <code>library</code> and <code>fallback</code> change.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <!-- ====================================================== PLAYGROUND -->
     <section class="section" id="playground" aria-labelledby="play-title">
       <div class="wrap">
         <div class="section-head">
           <div>
-            <span class="eyebrow">04 — Runtime API</span>
+            <span class="eyebrow">05 — Runtime API</span>
             <h2 id="play-title">Drive it. Break it. Rebuild it.</h2>
             <p>Free-mode dragging, wheel input, responsive breakpoints, live <code>update()</code>, cancellable <code>beforeChange</code>, and a genuine <code>destroy()</code> / re-init cycle.</p>
           </div>
@@ -329,7 +380,7 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <span class="eyebrow">05 — Integration</span>
+            <span class="eyebrow">06 — Integration</span>
             <h2 id="quick-title">Two calls, one lifecycle.</h2>
             <p>Install with <code>npm install zikra-slider-pro</code>, then call it as a factory or with <code>new</code>. Both return the same instance, with <code>update()</code>, <code>on()</code> and <code>destroy()</code> ready.</p>
           </div>

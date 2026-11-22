@@ -202,6 +202,157 @@
     animation: { library: 'none', effect: 'stagger', duration: 760, fallback: 'css' }
   });
 
+  /* ============================================================= engines */
+
+  const engineButtons = Array.from(document.querySelectorAll('[data-engine]'));
+  const engineStatus = byId('engine-status');
+  const engineSource = byId('engine-source');
+  const engineCode = byId('engine-code');
+  const engineNote = byId('engine-note');
+
+  const ENGINE_NAMES = { css: 'CSS', waapi: 'WAAPI', anime: 'anime.js', motion: 'Motion One' };
+  const ENGINE_SCRIPTS = {
+    anime: {
+      src: 'https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js',
+      ready: () => typeof window.anime === 'function' || !!(window.anime && typeof window.anime.animate === 'function')
+    },
+    motion: {
+      src: 'https://cdn.jsdelivr.net/npm/motion@10.16.4/dist/motion.min.js',
+      ready: () => {
+        const motion = window.motion || window.Motion;
+        return !!(motion && typeof motion.animate === 'function');
+      }
+    }
+  };
+  const ENGINE_NOTES = {
+    css: "library: 'none' skips every library; transitions run on transform and opacity only. This is the last rung of the ladder.",
+    waapi: "library: 'none' with fallback: 'waapi' hands the transition to Element.animate — the browser's own engine, nothing to download.",
+    anime: "anime.js is detected as v4 (a namespace with animate()) or v3 (a function). Nothing is bundled; the CDN script loads only when you pick it.",
+    motion: "Motion One's UMD build registers the Motion global (module builds can expose motion). Its seconds-based duration is converted by the adapter."
+  };
+
+  function engineOptions(name) {
+    return {
+      library: ENGINE_SCRIPTS[name] ? name : 'none',
+      effect: 'slide-up',
+      duration: 560,
+      fallback: name === 'css' ? 'css' : 'waapi'
+    };
+  }
+
+  function engineSnippet(name) {
+    const options = engineOptions(name);
+    const script = ENGINE_SCRIPTS[name]
+      ? `<script src="${ENGINE_SCRIPTS[name].src}"></script>\n\n`
+      : '';
+    return `${script}zikraslider('#slider', {
+  animation: {
+    library: '${options.library}',
+    effect: '${options.effect}',
+    duration: ${options.duration},
+    fallback: '${options.fallback}'
+  }
+});`;
+  }
+
+  const engineSlider = zs('#engine-slider', {
+    type: 'slide',
+    loop: true,
+    gap: 12,
+    initialSlide: 0,
+    arrows: { enabled: false },
+    bullets: { enabled: true, clickable: true },
+    features: {
+      autoplay: { enabled: true, delay: 4600, pauseOnHover: true },
+      drag: { enabled: true },
+      keyboard: { enabled: false },
+      a11y: { liveRegion: false }
+    },
+    animation: engineOptions('css')
+  });
+
+  let engineChoice = 'css';
+  let engineToken = 0;
+  const engineLoads = {};
+
+  function setEnginePressed(name) {
+    engineButtons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-engine') === name));
+    });
+  }
+
+  function syncEngineStatus() {
+    if (!engineStatus) return;
+    const backend = engineSlider.getState().backend || '—';
+    let text = `backend: ${backend}`;
+    if ((engineChoice === 'anime' || engineChoice === 'motion') && backend !== engineChoice) {
+      text += ' · fallback';
+    }
+    engineStatus.textContent = text;
+  }
+
+  function loadEngineScript(name) {
+    const info = ENGINE_SCRIPTS[name];
+    if (!info) return Promise.resolve('none');
+    if (info.ready()) return Promise.resolve('ready');
+    if (engineLoads[name]) return engineLoads[name];
+    engineLoads[name] = new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = info.src;
+      script.async = true;
+      script.onload = () => resolve(info.ready() ? 'ready' : 'unavailable');
+      script.onerror = () => resolve('unavailable');
+      document.head.appendChild(script);
+    });
+    return engineLoads[name];
+  }
+
+  async function applyEngine(name) {
+    const token = ++engineToken;
+    engineChoice = name;
+    setEnginePressed(name);
+    if (engineCode) engineCode.textContent = engineSnippet(name);
+    if (engineNote) engineNote.textContent = ENGINE_NOTES[name];
+    if (engineSource) {
+      engineSource.textContent = ENGINE_SCRIPTS[name]
+        ? `script: loading ${ENGINE_NAMES[name]}…`
+        : 'script: none needed';
+    }
+
+    const result = ENGINE_SCRIPTS[name] ? await loadEngineScript(name) : 'none';
+    if (token !== engineToken) return;
+
+    if (engineSource) {
+      engineSource.textContent = result === 'ready'
+        ? `script: ${ENGINE_NAMES[name]} ready`
+        : result === 'unavailable'
+          ? `script: ${ENGINE_NAMES[name]} cdn unavailable`
+          : 'script: none needed';
+    }
+
+    engineSlider.update({ animation: engineOptions(name) });
+    engineSlider.next({ reason: 'engine' });
+  }
+
+  engineButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      applyEngine(button.getAttribute('data-engine'));
+    });
+  });
+
+  document.querySelectorAll('[data-engine-nav]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.getAttribute('data-engine-nav') === 'prev') engineSlider.prev({ reason: 'engine' });
+      else engineSlider.next({ reason: 'engine' });
+    });
+  });
+
+  engineSlider.on('afterChange', syncEngineStatus);
+  setEnginePressed(engineChoice);
+  if (engineCode) engineCode.textContent = engineSnippet(engineChoice);
+  if (engineNote) engineNote.textContent = ENGINE_NOTES[engineChoice];
+  syncEngineStatus();
+
   /* ========================================================== playground */
 
   const stateEl = byId('state');
@@ -379,5 +530,5 @@
   });
 
   // Expose for manual poking in DevTools.
-  window.demo = { hero, heroThumbs, gallery, coverflow, get play() { return play; } };
+  window.demo = { hero, heroThumbs, gallery, coverflow, engineSlider, get play() { return play; } };
 })();

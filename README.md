@@ -626,6 +626,29 @@ Resolution order for each transition:
 
 The backend actually used last is reported as `getState().backend` (`'gsap'`, `'anime'`, `'motion'`, `'custom'`, `'waapi'`, `'css'`). Built-in adapters animate `x`, `y`, `z`, `scale`, `rotate` (rotateZ), `rotateY` and `opacity`, so 3D layouts such as `cards` and the `flip` effect stay smooth on every backend. Parallax elements are queued as extra items in the same plan and ride the same backend and timing; a custom adapter receives them as `{ x, y }` targets with neutral scale/rotation/opacity.
 
+### anime.js or Motion One
+
+Load the library yourself — a CDN script, a bundler import, whatever you already use — then name it once:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"></script>
+<!-- or -->
+<script src="https://cdn.jsdelivr.net/npm/motion@10.16.4/dist/motion.min.js"></script>
+```
+
+```js
+zikraslider('#slider', {
+  animation: {
+    library: 'anime', // 'anime' | 'motion' | 'gsap' | 'auto' | 'none'
+    effect: 'slide-up',
+    duration: 560, // ms; the adapters convert to seconds for GSAP/Motion
+    fallback: 'waapi' // then CSS if Element.animate is missing
+  }
+});
+```
+
+anime.js is detected as v4 (UMD namespace with `animate()`) or v3 (callable function); Motion One's UMD build exposes the `Motion` global. Set `library: 'none'` to skip every library: with `fallback: 'waapi'` the transition runs on `Element.animate`, with `'css'` it runs on transitions only. The demo's [Engines section](https://akhtar1985.github.io/zikra-slider-pro/examples/#engines) loads both CDN builds on demand and shows the live `getState().backend`.
+
 ### Custom adapter
 
 ```js
@@ -887,9 +910,10 @@ The demo exercises the deliverable set in one page:
 1. **Hero** — loop, autoplay, keyboard (when focused), external custom arrows, custom numbered bullets, a synced thumbnail strip (`sync.asThumbnails`, index mode) and a parallax caption layer.
 2. **Gallery** — lazy images, fraction bullets with a custom formatter, progress-synced filmstrip, clickable thumbnails and parallax artwork.
 3. **Effects** — fade (CSS), coverflow requesting a missing GSAP (`fallback: 'waapi'`, backend badge updates live), and a stacked-card type.
-4. **Playground** — free-mode drag, wheel, responsive breakpoints, live `getState()`, cancellable `beforeChange`, RTL update, and a real `destroy()` → rebuild cycle with the event log.
+4. **Engines** — one slider switched live between CSS → WAAPI → anime.js (v4 UMD) → Motion One, loading each library from jsDelivr on demand, with the live `getState().backend` and the exact options snippet.
+5. **Playground** — free-mode drag, wheel, responsive breakpoints, live `getState()`, cancellable `beforeChange`, RTL update, and a real `destroy()` → rebuild cycle with the event log.
 
-The page loads only `dist/zikra-slider.css` and `dist/zikraslider.umd.js`; demo code never imports internals. Artwork is generated SVG, so the demo works offline.
+The page loads only `dist/zikra-slider.css` and `dist/zikraslider.umd.js`; demo code never imports internals. Artwork is generated SVG, so everything except the optional engine scripts works offline.
 
 ## License
 
